@@ -144,12 +144,11 @@ public class UnitTestBaseController : MonoBehaviour {
       //Camera.main
         CamaraHolder.transform.RotateAround(new Vector3(
         Mathf.Sin(Camera.main.transform.localEulerAngles.y*Mathf.PI/180 ) * 
-        Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * Camera.main.transform.position.y * 
-        Mathf.Cos(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180),
+        Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * Camera.main.transform.parent.position.y,
+        0,
         Mathf.Cos(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
-        Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * Camera.main.transform.position.y *
-        Mathf.Cos(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180)
-        , 0)
+        Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * Camera.main.transform.parent.position.y
+        )
         , Vector3.up, 90);
       //Camera.main.transform.Rotate(Vector3.forward, 90);
     }
@@ -158,10 +157,11 @@ public class UnitTestBaseController : MonoBehaviour {
       //Camera.main
         CamaraHolder.transform.RotateAround(new Vector3(
         Mathf.Sin(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
-        Mathf.Tan(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) * Camera.main.transform.position.y,
+        Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * CamaraHolder.transform.position.y,
+        0,
         Mathf.Cos(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
-        Mathf.Tan(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) * Camera.main.transform.position.y
-        , 0)
+        Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * CamaraHolder.transform.position.y
+        )
         , Vector3.up, -90);
       //Camera.main.transform.RotateAround(Vector3.zero, Vector3.up, -90);
       //Camera.main.transform.Rotate(Vector3.forward, -90);
