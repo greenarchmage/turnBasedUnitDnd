@@ -11,6 +11,8 @@ public class UnitTestBaseController : MonoBehaviour {
   private cubeType[,,] worldLayout = new cubeType[200, 20, 200];
 
   private cubeType[,,] blueprint;
+
+  private GameObject selected;
   // Use this for initialization
   void Start()
   {
@@ -31,62 +33,34 @@ public class UnitTestBaseController : MonoBehaviour {
       }
     }
 
-    // Instantiate test building
-    /*
-    Vector3 baseVector = new Vector3(3, 1, 3);
-    for (int i = 0; i < 2; i++)
-    {
-        for (int j = 0; j < 2; j++)
-        {
-            GameObject tempStruc = Instantiate(cube, baseVector + new Vector3(i * 2, j, 0), Quaternion.identity) as GameObject;
-            tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Wood") as Material;
-        }
-    }
+    // Instantiate characters
 
-    for (int i = 0; i < 2; i++)
-    {
-        for (int j = 0; j < 2; j++)
-        {
-            GameObject tempStruc = Instantiate(cube, baseVector + new Vector3(i * 2, j, 2), Quaternion.identity) as GameObject;
-            tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Wood") as Material;
-        }
-    }
-
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            GameObject tempStruc = Instantiate(cube, baseVector + new Vector3(i, 2, j), Quaternion.identity) as GameObject;
-            tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Wood") as Material;
-        }
-    }
-    */
     //BlueprintTest
-    blueprint = new cubeType[3, 3, 3];
-    for (int i = 0; i < 2; i++)
-    {
-      for (int j = 0; j < 2; j++)
-      {
-        blueprint[i * 2, j, 0] = cubeType.WOOD;
-      }
-    }
+    //blueprint = new cubeType[3, 3, 3];
+    //for (int i = 0; i < 2; i++)
+    //{
+    //  for (int j = 0; j < 2; j++)
+    //  {
+    //    blueprint[i * 2, j, 0] = cubeType.WOOD;
+    //  }
+    //}
 
-    for (int i = 0; i < 2; i++)
-    {
-      for (int j = 0; j < 2; j++)
-      {
-        blueprint[i * 2, j, 2] = cubeType.WOOD;
-      }
-    }
+    //for (int i = 0; i < 2; i++)
+    //{
+    //  for (int j = 0; j < 2; j++)
+    //  {
+    //    blueprint[i * 2, j, 2] = cubeType.WOOD;
+    //  }
+    //}
 
-    for (int i = 0; i < 3; i++)
-    {
-      for (int j = 0; j < 3; j++)
-      {
-        blueprint[i, 2, j] = cubeType.WOOD;
-      }
-    }
-    instantiateBlueprint(blueprint, new Vector3(7, 1, 3));
+    //for (int i = 0; i < 3; i++)
+    //{
+    //  for (int j = 0; j < 3; j++)
+    //  {
+    //    blueprint[i, 2, j] = cubeType.WOOD;
+    //  }
+    //}
+    //instantiateBlueprint(blueprint, new Vector3(7, 1, 3));
   }
 
   // Update is called once per frame
@@ -116,7 +90,7 @@ public class UnitTestBaseController : MonoBehaviour {
       //Camera.main.transform.Translate(new Vector3(1, 0, 1) * camSpeed / 10);
     }
 
-    //Raycast
+    //Raycast mouse 0
     if (Input.GetMouseButtonDown(0))
     {
       RaycastHit hit;
@@ -128,11 +102,40 @@ public class UnitTestBaseController : MonoBehaviour {
         Debug.Log(objectHit.name);
         Debug.Log(objectHit.GetComponent<MeshRenderer>().material.name);
 
-        if (objectHit.GetComponent<MeshRenderer>().material.name == "Grass (Instance)")
-        {
-          instantiateBlueprint(blueprint, objectHit.transform.position + new Vector3(0, 1, 0));
-        }
+        // Blue print test
+        //if (objectHit.GetComponent<MeshRenderer>().material.name == "Grass (Instance)")
+        //{
+        //  instantiateBlueprint(blueprint, objectHit.transform.position + new Vector3(0, 1, 0));
+        //}
+
         // Do something with the object that was hit by the raycast.
+        if(objectHit.GetComponent<Selectable>() != null)
+        {
+          selected = objectHit.gameObject;
+        }
+      }
+    }
+
+    //Raycast mouse 1
+    if (Input.GetMouseButtonDown(1))
+    {
+      Debug.Log(selected);
+      if(selected != null)
+      {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit))
+        {
+          Transform objectHit = hit.transform;
+          Debug.Log(objectHit.name);
+          Debug.Log(objectHit.GetComponent<MeshRenderer>().material.name);
+
+          if(objectHit.GetComponent<MeshRenderer>().material.name == "Grass (Instance)")
+          {
+            selected.transform.position = objectHit.position + new Vector3(0f,1.5f,0f);
+          }
+        }
       }
     }
 
