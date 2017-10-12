@@ -2,93 +2,95 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Utility;
+using Assets.Scripts.Pathfinding;
+using Assets.Scripts.World;
+using Assets.Scripts.Character;
 
 public class UnitTestBaseController : MonoBehaviour {
-  public GameObject CamaraHolder;
+  public GameObject CameraHolder;
+
+  public GameObject TerrainHolder;
 
   private GameObject cube;
   private float camSpeed = 5;
   private cubeType[,,] worldLayout = new cubeType[200, 20, 200];
 
-  private cubeType[,,] blueprint;
+  private TerrainPiece[,,] terrainLayout = new TerrainPiece[20, 20, 20];
 
   private GameObject selected;
+
+  private GameObject testPathChar;
   // Use this for initialization
   void Start()
   {
     // load prefab
     cube = Resources.Load("Prefabs/cube") as GameObject;
-    // world generation test
+    // world generation test, from old source
     //generateWorld();
 
-    // Instantiate floor level
+    // Instantiate floor level, used for testing
 
     for (int i = 0; i < 20; i++)
     {
       for (int j = 0; j < 20; j++)
       {
-        GameObject baseCube = Instantiate(cube, new Vector3(i, 0, j), Quaternion.identity) as GameObject;
+        GameObject baseCube = Instantiate(cube, new Vector3(i, 0, j), Quaternion.identity, TerrainHolder.transform) as GameObject;
         baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
         worldLayout[i, 0, j] = cubeType.GRASS;
       }
     }
 
     // Instantiate characters
-
-    //BlueprintTest
-    //blueprint = new cubeType[3, 3, 3];
-    //for (int i = 0; i < 2; i++)
-    //{
-    //  for (int j = 0; j < 2; j++)
-    //  {
-    //    blueprint[i * 2, j, 0] = cubeType.WOOD;
-    //  }
-    //}
-
-    //for (int i = 0; i < 2; i++)
-    //{
-    //  for (int j = 0; j < 2; j++)
-    //  {
-    //    blueprint[i * 2, j, 2] = cubeType.WOOD;
-    //  }
-    //}
-
-    //for (int i = 0; i < 3; i++)
-    //{
-    //  for (int j = 0; j < 3; j++)
-    //  {
-    //    blueprint[i, 2, j] = cubeType.WOOD;
-    //  }
-    //}
-    //instantiateBlueprint(blueprint, new Vector3(7, 1, 3));
+    // TODO
+    testPathChar =Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(10f, 2f, 10f), Quaternion.identity) as GameObject;
   }
 
   // Update is called once per frame
   void Update()
   {
+    #region CameraControls
     //Camera movement keyboard
     // Works at any rotation
     if (Input.GetKey(KeyCode.W))
     {
-      CamaraHolder.transform.Translate(new Vector3(0, 1, 0) * camSpeed / 10);
-      //Camera.main.transform.Translate(new Vector3(0, 1, 0) * camSpeed / 10);
+      CameraHolder.transform.Translate(new Vector3(0, 1, 0) * camSpeed / 10);
     }
     if (Input.GetKey(KeyCode.S))
     {
-      CamaraHolder.transform.Translate(new Vector3(0, -1, 0) * camSpeed / 10);
-
-      //Camera.main.transform.Translate(new Vector3(0, -1, 0) * camSpeed / 10);
+      CameraHolder.transform.Translate(new Vector3(0, -1, 0) * camSpeed / 10);
     }
     if (Input.GetKey(KeyCode.A))
     {
-      CamaraHolder.transform.Translate(new Vector3(1, 0, -1) * -camSpeed / 10);
-      //Camera.main.transform.Translate(new Vector3(1, 0, 1) * -camSpeed / 10);
+      CameraHolder.transform.Translate(new Vector3(1, 0, -1) * -camSpeed / 10);
     }
     if (Input.GetKey(KeyCode.D))
     {
-      CamaraHolder.transform.Translate(new Vector3(1, 0, -1) * camSpeed / 10);
-      //Camera.main.transform.Translate(new Vector3(1, 0, 1) * camSpeed / 10);
+      CameraHolder.transform.Translate(new Vector3(1, 0, -1) * camSpeed / 10);
     }
+    //Rotate 
+    if (Input.GetKeyDown(KeyCode.Q))
+    {
+      CameraHolder.transform.RotateAround(new Vector3(
+      Mathf.Sin(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
+      Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * Camera.main.transform.parent.position.y,
+      0,
+      Mathf.Cos(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
+      Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * Camera.main.transform.parent.position.y
+      )
+      , Vector3.up, 90);
+    }
+    if (Input.GetKeyDown(KeyCode.E))
+    {
+      CameraHolder.transform.RotateAround(new Vector3(
+      Mathf.Sin(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
+      Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * CameraHolder.transform.position.y,
+      0,
+      Mathf.Cos(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
+      Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * CameraHolder.transform.position.y
+      )
+      , Vector3.up, -90);
+    }
+    #endregion
 
     //Raycast mouse 0
     if (Input.GetMouseButtonDown(0))
@@ -101,12 +103,6 @@ public class UnitTestBaseController : MonoBehaviour {
         Transform objectHit = hit.transform;
         Debug.Log(objectHit.name);
         Debug.Log(objectHit.GetComponent<MeshRenderer>().material.name);
-
-        // Blue print test
-        //if (objectHit.GetComponent<MeshRenderer>().material.name == "Grass (Instance)")
-        //{
-        //  instantiateBlueprint(blueprint, objectHit.transform.position + new Vector3(0, 1, 0));
-        //}
 
         // Do something with the object that was hit by the raycast.
         if(objectHit.GetComponent<Selectable>() != null)
@@ -133,41 +129,25 @@ public class UnitTestBaseController : MonoBehaviour {
 
           if(objectHit.GetComponent<MeshRenderer>().material.name == "Grass (Instance)")
           {
-            selected.transform.position = objectHit.position + new Vector3(0f,1.5f,0f);
+            selected.transform.position = objectHit.position + new Vector3(0f, (selected.transform.localScale.y/2) +0.5f, 0f);
           }
         }
       }
     }
 
-    //Rotate 
-    //Does not work yet
-    if (Input.GetKeyDown(KeyCode.Q))
+    // test shortest path
+    if (Input.GetKeyDown(KeyCode.Space))
     {
-      //Camera.main.transform.RotateAround(Vector3.zero, Vector3.up, 90);
-      //Camera.main
-        CamaraHolder.transform.RotateAround(new Vector3(
-        Mathf.Sin(Camera.main.transform.localEulerAngles.y*Mathf.PI/180 ) * 
-        Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * Camera.main.transform.parent.position.y,
-        0,
-        Mathf.Cos(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
-        Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * Camera.main.transform.parent.position.y
-        )
-        , Vector3.up, 90);
-      //Camera.main.transform.Rotate(Vector3.forward, 90);
-    }
-    if (Input.GetKeyDown(KeyCode.E))
-    {
-      //Camera.main
-        CamaraHolder.transform.RotateAround(new Vector3(
-        Mathf.Sin(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
-        Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * CamaraHolder.transform.position.y,
-        0,
-        Mathf.Cos(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
-        Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * CamaraHolder.transform.position.y
-        )
-        , Vector3.up, -90);
-      //Camera.main.transform.RotateAround(Vector3.zero, Vector3.up, -90);
-      //Camera.main.transform.Rotate(Vector3.forward, -90);
+      if(selected != null)
+      {
+        Vector3 selectedCubePos = selected.GetComponent<Character>().GetGridPosition();
+        Vector3 testCubePos = testPathChar.GetComponent<Character>().GetGridPosition();
+        List<PathNode> path = AStar.ShortestPath(terrainLayout, new bool[20, 20, 20],
+          (int)testCubePos.x, (int)testCubePos.y, (int)testCubePos.z,
+          (int)selectedCubePos.x, (int)selectedCubePos.y, (int)selectedCubePos.z);
+        testPathChar.GetComponent<Character>().Path = path;
+        Debug.Log(path.Count);
+      }
     }
   }
 
