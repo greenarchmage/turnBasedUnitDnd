@@ -15,7 +15,7 @@ public class UnitTestBaseController : MonoBehaviour {
   private float camSpeed = 5;
   private cubeType[,,] worldLayout = new cubeType[200, 20, 200];
 
-  private TerrainPiece[,,] terrainLayout = new TerrainPiece[20, 20, 20];
+  //private TerrainPiece[,,] terrainLayout = new TerrainPiece[20, 20, 20];
 
   private GameObject selected;
 
@@ -37,7 +37,7 @@ public class UnitTestBaseController : MonoBehaviour {
         GameObject baseCube = Instantiate(cube, new Vector3(i, 0, j), Quaternion.identity, TerrainHolder.transform) as GameObject;
         baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
         worldLayout[i, 0, j] = cubeType.GRASS;
-        terrainLayout[i, 0, j] = new TerrainPiece();
+        //terrainLayout[i, 0, j] = new TerrainPiece();
       }
     }
 
@@ -49,7 +49,7 @@ public class UnitTestBaseController : MonoBehaviour {
         GameObject baseCube = Instantiate(cube, new Vector3(i, j, 3), Quaternion.identity, TerrainHolder.transform) as GameObject;
         baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
         worldLayout[i, j, 3] = cubeType.GRASS;
-        terrainLayout[i, j, 3] = new TerrainPiece();
+        //terrainLayout[i, j, 3] = new TerrainPiece();
       }
     }
 
@@ -169,7 +169,7 @@ public class UnitTestBaseController : MonoBehaviour {
       {
         Vector3 selectedCubePos = selected.GetComponent<Character>().GetGridPosition();
         Vector3 testCubePos = testPathChar.GetComponent<Character>().GetGridPosition();
-        List<PathNode> path = AStar.ShortestPath(terrainLayout, new bool[20, 20, 20],
+        List<PathNode> path = AStar.ShortestPath(worldLayout, new bool[20, 20, 20],
           (int)testCubePos.x, (int)testCubePos.y, (int)testCubePos.z,
           (int)selectedCubePos.x, (int)selectedCubePos.y, (int)selectedCubePos.z);
         testPathChar.GetComponent<Character>().Path = path;

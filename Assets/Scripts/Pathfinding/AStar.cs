@@ -13,12 +13,12 @@ namespace Assets.Scripts.Pathfinding
       return Math.Abs(posx1 - posx2) + Math.Abs(posz1 - posz2);
     }
     
-    public static bool exists(int x, int y, TerrainPiece[,,] array)
+    public static bool exists(int x, int y, cubeType[,,] array)
     {
       return x >= 0 && y >= 0 && x < array.GetLength(0) && y < array.GetLength(1);
     }
 
-    public static List<PathNode> ShortestPath(TerrainPiece[,,] terrainLayout, bool[,,] obstructed, int startX, int startY,int startZ, 
+    public static List<PathNode> ShortestPath(cubeType[,,] terrainLayout, bool[,,] obstructed, int startX, int startY,int startZ, 
       int goalX, int goalY, int goalZ)
     {
       // intantiate distance matrix
@@ -96,7 +96,7 @@ namespace Assets.Scripts.Pathfinding
       else return (this.total() < other.total() ? -1 : 1);
     }
 
-    public List<Node> generateNeighbours(TerrainPiece[,,] terrainLayout, bool[,,] obstructed, int[,] distanceMatrix, int goalX, int goalY, int goalZ)
+    public List<Node> generateNeighbours(cubeType[,,] terrainLayout, bool[,,] obstructed, int[,] distanceMatrix, int goalX, int goalY, int goalZ)
     {
       List<Node> list = new List<Node>();
       createAndAdd(x + 1, z, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list);
@@ -111,7 +111,7 @@ namespace Assets.Scripts.Pathfinding
       return list;
     }
 
-    private void createAndAdd(int newX, int newZ, int goalX, int goalY, int goalZ, TerrainPiece[,,] terrainLayout,
+    private void createAndAdd(int newX, int newZ, int goalX, int goalY, int goalZ, cubeType[,,] terrainLayout,
                                 bool[,,] obstructed, int[,] distanceMatrix, List<Node> list)
     {
       if (AStar.exists(newX, newZ, terrainLayout))
@@ -121,7 +121,7 @@ namespace Assets.Scripts.Pathfinding
         int moveCost = 1; //TODO add idiagonal rout calculation
         if (!obstructed[newX, y, newZ]) 
         {
-          if (terrainLayout[newX, y, newZ] == null && terrainLayout[newX, y + 1, newZ] == null) //check height difference upwards
+          if (terrainLayout[newX, y, newZ] == cubeType.NONE && terrainLayout[newX, y + 1, newZ] == cubeType.NONE) //check height difference upwards
           {
             passableTerrain = true;
           }
@@ -130,7 +130,7 @@ namespace Assets.Scripts.Pathfinding
         if (passableTerrain)
         {
           int newEstimate = AStar.ManhattanDistance(newX, newZ, goalX, goalZ);
-          int height = terrainLayout[newX, y, newZ] != null ? y + 1 : y;
+          int height = terrainLayout[newX, y, newZ] != cubeType.NONE ? y + 1 : y;
           Node newNode = new Node(newX, height,newZ, newCost, newEstimate, moveCost);
           newNode.Parent = this;
           if (distanceMatrix[newX, newZ] < 0 || newCost < distanceMatrix[newX, newZ])
