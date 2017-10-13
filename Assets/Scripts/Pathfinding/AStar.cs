@@ -119,11 +119,13 @@ namespace Assets.Scripts.Pathfinding
         bool passableTerrain = false;
         int newCost = this.costToGetHere + 1; //TODO add idiagonal rout calculation
         int moveCost = 1; //TODO add idiagonal rout calculation
-        if (!obstructed[newX, y, newZ] 
-          && !(terrainLayout[newX, y, newZ] != null && terrainLayout[newX, y, newZ] != null)) //check height difference upwards
+        if (!obstructed[newX, y, newZ]) 
         {
-          passableTerrain = true;
-        }
+          if (terrainLayout[newX, y, newZ] == null && terrainLayout[newX, y + 1, newZ] == null) //check height difference upwards
+          {
+            passableTerrain = true;
+          }
+        } 
 
         if (passableTerrain)
         {

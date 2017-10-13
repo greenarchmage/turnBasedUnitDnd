@@ -37,6 +37,19 @@ public class UnitTestBaseController : MonoBehaviour {
         GameObject baseCube = Instantiate(cube, new Vector3(i, 0, j), Quaternion.identity, TerrainHolder.transform) as GameObject;
         baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
         worldLayout[i, 0, j] = cubeType.GRASS;
+        terrainLayout[i, 0, j] = new TerrainPiece();
+      }
+    }
+
+    //build wall
+    for(int i = 0; i< 5; i++)
+    {
+      for (int j = 1; j < 3; j++)
+      {
+        GameObject baseCube = Instantiate(cube, new Vector3(i, j, 3), Quaternion.identity, TerrainHolder.transform) as GameObject;
+        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
+        worldLayout[i, j, 3] = cubeType.GRASS;
+        terrainLayout[i, j, 3] = new TerrainPiece();
       }
     }
 
