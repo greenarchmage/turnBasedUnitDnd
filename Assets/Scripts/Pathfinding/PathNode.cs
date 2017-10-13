@@ -7,9 +7,9 @@ namespace Assets.Scripts.Pathfinding
 {
   public class PathNode
   {
-    public int Cost { get; set; }
+    public float Cost { get; set; }
     public int[] Coord { get; set; }
-    public PathNode(int moveCost, int[] coordinate)
+    public PathNode(float moveCost, int[] coordinate)
     {
       Cost = moveCost;
       Coord = coordinate;

@@ -22,7 +22,7 @@ namespace Assets.Scripts.Pathfinding
       int goalX, int goalY, int goalZ)
     {
       // intantiate distance matrix
-      int[,] distanceMatrix = new int[terrainLayout.GetLength(0), terrainLayout.GetLength(2)];
+      float[,] distanceMatrix = new float[terrainLayout.GetLength(0), terrainLayout.GetLength(2)];
       for (int i = 0; i < distanceMatrix.GetLength(0); i++)
       {
         for (int j = 0; j < distanceMatrix.GetLength(1); j++)
@@ -69,10 +69,10 @@ namespace Assets.Scripts.Pathfinding
     public int x { get; set; }
     public int y { get; set; }
     public int z { get; set; }
-    public int costToGetHere { get; set; }
-    public int estimatedCostToGoal { get; set; }
-    public int MoveCost { get; set; }
-    public Node(int x,int y, int z, int costToGetHere, int estimatedCostToGoal, int moveCost)
+    public float costToGetHere { get; set; }
+    public float estimatedCostToGoal { get; set; }
+    public float MoveCost { get; set; }
+    public Node(int x,int y, int z, float costToGetHere, float estimatedCostToGoal, float moveCost)
     {
       this.x = x;
       this.y = y;
@@ -82,7 +82,7 @@ namespace Assets.Scripts.Pathfinding
       this.MoveCost = moveCost;
     }
 
-    public int total()
+    public float total()
     {
       return costToGetHere + estimatedCostToGoal;
     }
@@ -96,32 +96,34 @@ namespace Assets.Scripts.Pathfinding
       else return (this.total() < other.total() ? -1 : 1);
     }
 
-    public List<Node> generateNeighbours(cubeType[,,] terrainLayout, bool[,,] obstructed, int[,] distanceMatrix, int goalX, int goalY, int goalZ)
+    public List<Node> generateNeighbours(cubeType[,,] terrainLayout, bool[,,] obstructed, float[,] distanceMatrix, int goalX, int goalY, int goalZ)
     {
       List<Node> list = new List<Node>();
-      createAndAdd(x + 1, z, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list);
-      createAndAdd(x + 1, z + 1, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list);
-      createAndAdd(x + 1, z - 1, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list);
-      createAndAdd(x - 1, z, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list);
-      createAndAdd(x - 1, z - 1, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list);
-      createAndAdd(x - 1, z + 1, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list);
-      createAndAdd(x, z + 1, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list);
-      createAndAdd(x, z - 1, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list);
+      createAndAdd(x + 1, z, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list, 1);
+      createAndAdd(x + 1, z + 1, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list, 1.5f);
+      createAndAdd(x + 1, z - 1, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list,1.5f);
+      createAndAdd(x - 1, z, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list, 1);
+      createAndAdd(x - 1, z - 1, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list, 1.5f);
+      createAndAdd(x - 1, z + 1, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list, 1.5f);
+      createAndAdd(x, z + 1, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list, 1);
+      createAndAdd(x, z - 1, goalX, goalY, goalZ, terrainLayout, obstructed, distanceMatrix, list, 1);
 
       return list;
     }
 
     private void createAndAdd(int newX, int newZ, int goalX, int goalY, int goalZ, cubeType[,,] terrainLayout,
-                                bool[,,] obstructed, int[,] distanceMatrix, List<Node> list)
+                                bool[,,] obstructed, float[,] distanceMatrix, List<Node> list, float movecost)
     {
       if (AStar.exists(newX, newZ, terrainLayout))
       {
         bool passableTerrain = false;
-        int newCost = this.costToGetHere + 1; //TODO add idiagonal rout calculation
-        int moveCost = 1; //TODO add idiagonal rout calculation
-        if (!obstructed[newX, y, newZ]) 
+        float newCost = this.costToGetHere + movecost; //TODO add idiagonal rout calculation
+        float moveCost = movecost; //TODO add idiagonal rout calculation
+        if (!obstructed[newX, y, newZ] && !( y-2 >= 0 && terrainLayout[newX, y - 2, newZ] == cubeType.NONE)) 
         {
-          if (terrainLayout[newX, y, newZ] == cubeType.NONE && terrainLayout[newX, y + 1, newZ] == cubeType.NONE) //check height difference upwards
+          if ((terrainLayout[newX, y, newZ] == cubeType.NONE && terrainLayout[newX, y + 1, newZ] == cubeType.NONE) //check height difference upwards
+            || (terrainLayout[newX, y + 1, newZ] == cubeType.NONE && terrainLayout[newX, y + 2, newZ] == cubeType.NONE) // check height difference for one up
+            ||  (y-1 >=0 && (terrainLayout[newX, y, newZ] == cubeType.NONE && terrainLayout[newX, y - 1, newZ] == cubeType.NONE))) // check height difference for one down
           {
             passableTerrain = true;
           }
@@ -130,7 +132,7 @@ namespace Assets.Scripts.Pathfinding
         if (passableTerrain)
         {
           int newEstimate = AStar.ManhattanDistance(newX, newZ, goalX, goalZ);
-          int height = terrainLayout[newX, y, newZ] != cubeType.NONE ? y + 1 : y;
+          int height = terrainLayout[newX, y, newZ] != cubeType.NONE ? y + 1 : terrainLayout[newX, y - 1, newZ] == cubeType.NONE ? y - 1 : y;
           Node newNode = new Node(newX, height,newZ, newCost, newEstimate, moveCost);
           newNode.Parent = this;
           if (distanceMatrix[newX, newZ] < 0 || newCost < distanceMatrix[newX, newZ])

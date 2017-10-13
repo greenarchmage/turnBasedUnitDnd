@@ -15,8 +15,6 @@ public class UnitTestBaseController : MonoBehaviour {
   private float camSpeed = 5;
   private cubeType[,,] worldLayout = new cubeType[200, 20, 200];
 
-  //private TerrainPiece[,,] terrainLayout = new TerrainPiece[20, 20, 20];
-
   private GameObject selected;
 
   private GameObject testPathChar;
@@ -37,7 +35,6 @@ public class UnitTestBaseController : MonoBehaviour {
         GameObject baseCube = Instantiate(cube, new Vector3(i, 0, j), Quaternion.identity, TerrainHolder.transform) as GameObject;
         baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
         worldLayout[i, 0, j] = cubeType.GRASS;
-        //terrainLayout[i, 0, j] = new TerrainPiece();
       }
     }
 
@@ -47,9 +44,8 @@ public class UnitTestBaseController : MonoBehaviour {
       for (int j = 1; j < 3; j++)
       {
         GameObject baseCube = Instantiate(cube, new Vector3(i, j, 3), Quaternion.identity, TerrainHolder.transform) as GameObject;
-        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-        worldLayout[i, j, 3] = cubeType.GRASS;
-        //terrainLayout[i, j, 3] = new TerrainPiece();
+        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Rock") as Material;
+        worldLayout[i, j, 3] = cubeType.ROCK;
       }
     }
 
@@ -67,6 +63,25 @@ public class UnitTestBaseController : MonoBehaviour {
       }
     }
 
+    //make a platuea
+    for(int i = 0; i < 4; i++)
+    {
+      for(int j = 0; j<4; j++)
+      {
+        GameObject baseCube = Instantiate(cube, new Vector3(i + 15, 1, j + 13), Quaternion.identity, TerrainHolder.transform) as GameObject;
+        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
+        worldLayout[i + 15, 1, j + 13] = cubeType.GRASS;
+      }
+    }
+    for(int i = 0; i<2; i++)
+    {
+      for(int j = 0; j < 2; j++)
+      {
+        GameObject baseCube = Instantiate(cube, new Vector3(i + 15, 2, j + 13), Quaternion.identity, TerrainHolder.transform) as GameObject;
+        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
+        worldLayout[i + 15, 2, j + 13] = cubeType.GRASS;
+      }
+    }
     // Instantiate characters
     // TODO
     testPathChar =Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(10f, 2f, 10f), Quaternion.identity) as GameObject;
@@ -128,8 +143,6 @@ public class UnitTestBaseController : MonoBehaviour {
       if (Physics.Raycast(ray, out hit))
       {
         Transform objectHit = hit.transform;
-        Debug.Log(objectHit.name);
-        Debug.Log(objectHit.GetComponent<MeshRenderer>().material.name);
 
         // Do something with the object that was hit by the raycast.
         if(objectHit.GetComponent<Selectable>() != null)
@@ -142,7 +155,6 @@ public class UnitTestBaseController : MonoBehaviour {
     //Raycast mouse 1
     if (Input.GetMouseButtonDown(1))
     {
-      Debug.Log(selected);
       if(selected != null)
       {
         RaycastHit hit;
@@ -151,8 +163,6 @@ public class UnitTestBaseController : MonoBehaviour {
         if (Physics.Raycast(ray, out hit))
         {
           Transform objectHit = hit.transform;
-          Debug.Log(objectHit.name);
-          Debug.Log(objectHit.GetComponent<MeshRenderer>().material.name);
 
           if(objectHit.GetComponent<MeshRenderer>().material.name == "Grass (Instance)")
           {
@@ -169,11 +179,16 @@ public class UnitTestBaseController : MonoBehaviour {
       {
         Vector3 selectedCubePos = selected.GetComponent<Character>().GetGridPosition();
         Vector3 testCubePos = testPathChar.GetComponent<Character>().GetGridPosition();
-        List<PathNode> path = AStar.ShortestPath(worldLayout, new bool[20, 20, 20],
+        List<PathNode> path = AStar.ShortestPath(worldLayout, new bool[200, 20, 200],
           (int)testCubePos.x, (int)testCubePos.y, (int)testCubePos.z,
           (int)selectedCubePos.x, (int)selectedCubePos.y, (int)selectedCubePos.z);
         testPathChar.GetComponent<Character>().Path = path;
-        Debug.Log(path.Count);
+        float pathCost = 0;
+        for(int i = 0; i < path.Count; i++)
+        {
+          pathCost += path[i].Cost;
+        }
+        Debug.Log("Cost of path " +pathCost);
       }
     }
   }
