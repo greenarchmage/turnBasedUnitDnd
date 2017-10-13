@@ -40,6 +40,20 @@ public class UnitTestBaseController : MonoBehaviour {
       }
     }
 
+    // place rock
+    for(int i = 0; i< 2; i++)
+    {
+      for(int j = 0; j < 2; j++)
+      {
+        GameObject baseCube = Instantiate(cube, new Vector3(i+7, 1, j+3), Quaternion.identity, TerrainHolder.transform) as GameObject;
+        GameObject topCube = Instantiate(cube, new Vector3(i+7, 2, j+3), Quaternion.identity, TerrainHolder.transform) as GameObject;
+        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Rock") as Material;
+        topCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Rock") as Material;
+        worldLayout[i+7, 1, j+3] = cubeType.ROCK;
+        worldLayout[i+7, 2, j+3] = cubeType.ROCK;
+      }
+    }
+
     // Instantiate characters
     // TODO
     testPathChar =Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(10f, 2f, 10f), Quaternion.identity) as GameObject;
