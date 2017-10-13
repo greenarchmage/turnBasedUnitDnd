@@ -11,12 +11,18 @@ namespace Assets.Scripts.Character
   {
     public List<PathNode> Path { get; set; }
 
+    public CharacterStats Stats { get; set; }
+
+    public Player Owner { get; set; }
+    public float MoveLeft { get; set; }
+
     private float deltaTime;
     void Update()
     {
-      if(Path != null && Path.Count >0 && deltaTime < Time.realtimeSinceStartup)
+      if(Path != null && Path.Count >0 && deltaTime < Time.realtimeSinceStartup && Path[0].Cost < MoveLeft)
       {
         transform.position = new Vector3(Path[0].Coord[0], (Path[0].Coord[1] + transform.localScale.y/2 -0.5f), Path[0].Coord[2]);
+        MoveLeft -= Path[0].Cost;
         Path.RemoveAt(0);
         deltaTime = Time.realtimeSinceStartup + 0.5f;
       }

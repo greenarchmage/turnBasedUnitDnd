@@ -85,6 +85,7 @@ public class UnitTestBaseController : MonoBehaviour {
     // Instantiate characters
     // TODO
     testPathChar =Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(10f, 2f, 10f), Quaternion.identity) as GameObject;
+    testPathChar.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
   }
 
   // Update is called once per frame
@@ -136,7 +137,7 @@ public class UnitTestBaseController : MonoBehaviour {
     //zoom
     if (Input.GetAxis("Mouse ScrollWheel") > 0)
     {
-      float newCamSize = Mathf.Clamp(Camera.main.orthographicSize - 1, 1.0f, 100.0f);
+      float newCamSize = Mathf.Clamp(Camera.main.orthographicSize - 1, 1.0f, 20.0f);
       Camera.main.orthographicSize = newCamSize;
     }
 
@@ -204,6 +205,12 @@ public class UnitTestBaseController : MonoBehaviour {
         }
         Debug.Log("Cost of path " +pathCost);
       }
+    }
+
+    // reset MovementLeft test
+    if (Input.GetKeyDown(KeyCode.Return))
+    {
+      testPathChar.GetComponent<Character>().MoveLeft = testPathChar.GetComponent<Character>().Stats.MovementSpeed;
     }
   }
 
