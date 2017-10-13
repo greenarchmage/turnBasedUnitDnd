@@ -132,6 +132,20 @@ public class UnitTestBaseController : MonoBehaviour {
       )
       , Vector3.up, -90);
     }
+
+    //zoom
+    if (Input.GetAxis("Mouse ScrollWheel") > 0)
+    {
+      float newCamSize = Mathf.Clamp(Camera.main.orthographicSize - 1, 1.0f, 100.0f);
+      Camera.main.orthographicSize = newCamSize;
+    }
+
+    if (Input.GetAxis("Mouse ScrollWheel") < 0)
+    {
+      float newCamSize = Mathf.Clamp(Camera.main.orthographicSize + 1, 1.0f, 20.0f);
+      Camera.main.orthographicSize = newCamSize;
+    }
+
     #endregion
 
     //Raycast mouse 0
