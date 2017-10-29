@@ -16,32 +16,34 @@ namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
 
     public override NodeStatus Tick()
     {
-      return NodeStatus.Success;
-    }
-
-    public void Run(Hashtable data)
-    {
-      Character.Character thisChar = (Character.Character)data["currentChar"];
-      List<Character.Character> listOfCharacters = (List<Character.Character>)data["characters"];
+      Character.Character thisChar = (Character.Character)tree.treeData[BehaviourTreeData.CurrentCharacter];
+      List<Character.Character> listOfCharacters = (List<Character.Character>)tree.treeData[BehaviourTreeData.AllCharacters];
 
       List<Pathfinding.PathNode> shortPath = null;
 
       foreach (Character.Character c in listOfCharacters)
       {
-        if(c.Owner.Name != thisChar.Owner.Name)
+        if (c.Owner.Name != thisChar.Owner.Name)
         {
           Vector3 thisPos = thisChar.GetGridPosition();
           Vector3 cPos = c.GetGridPosition();
-          List<Pathfinding.PathNode> path = Pathfinding.AStar.ShortestPath((Utility.cubeType[,,])data["terrainLayout"], (bool[,,])data["obstructed"],
+          List<Pathfinding.PathNode> path = Pathfinding.AStar.ShortestPath((Utility.cubeType[,,])tree.treeData[BehaviourTreeData.WorldLayout], 
+            (bool[,,])tree.treeData[BehaviourTreeData.WorldLayoutObstructed],
             (int)thisPos.x, (int)thisPos.y, (int)thisPos.z,
           (int)cPos.x, (int)cPos.y, (int)cPos.z);
-          if(shortPath == null || PathLength(path) < PathLength(shortPath))
+          if (shortPath == null || PathLength(path) < PathLength(shortPath))
           {
             shortPath = path;
           }
         }
       }
-
+      if(shortPath != null)
+      {
+        return NodeStatus.Success;
+      } else
+      {
+        return NodeStatus.Failure;
+      }
     }
 
     private float PathLength(List<Pathfinding.PathNode> path)

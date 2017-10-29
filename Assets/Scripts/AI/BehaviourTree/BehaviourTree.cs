@@ -8,16 +8,16 @@ namespace Assets.Scripts.AI.BehaviourTree
 {
   public enum BehaviourTreeData
   {
-    Actor,
-    DialogBehavior,
-    Personality,
+    CurrentCharacter,
+    AllCharacters,
+    WorldLayout,
+    WorldLayoutObstructed,
     SortedDesires,
     DesireDestination,
     SetNewDestAllowed,
     DesireTimeStart,
     DesireStimulated,
     NearbyActors
-
   }
 
   public class BehaviourTree

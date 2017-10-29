@@ -18,6 +18,8 @@ public class UnitTestBaseController : MonoBehaviour {
 
   public TerrainController TerrainController;
 
+
+
   // Use this for initialization
   void Start()
   {
