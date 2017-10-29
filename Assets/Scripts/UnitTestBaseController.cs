@@ -9,82 +9,24 @@ using Assets.Scripts.Character;
 public class UnitTestBaseController : MonoBehaviour {
   public GameObject CameraHolder;
 
-  public GameObject TerrainHolder;
-
   private GameObject cube;
   private float camSpeed = 5;
-  private cubeType[,,] worldLayout = new cubeType[200, 20, 200];
 
   private GameObject selected;
 
   private GameObject testPathChar;
+
+  public TerrainController TerrainController;
+
   // Use this for initialization
   void Start()
   {
     // load prefab
     cube = Resources.Load("Prefabs/cube") as GameObject;
-    // world generation test, from old source
-    //generateWorld();
 
-    // Instantiate floor level, used for testing
-
-    for (int i = 0; i < 20; i++)
-    {
-      for (int j = 0; j < 20; j++)
-      {
-        GameObject baseCube = Instantiate(cube, new Vector3(i, 0, j), Quaternion.identity, TerrainHolder.transform) as GameObject;
-        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-        worldLayout[i, 0, j] = cubeType.GRASS;
-      }
-    }
-
-    //build wall
-    for(int i = 0; i< 5; i++)
-    {
-      for (int j = 1; j < 3; j++)
-      {
-        GameObject baseCube = Instantiate(cube, new Vector3(i, j, 3), Quaternion.identity, TerrainHolder.transform) as GameObject;
-        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Rock") as Material;
-        worldLayout[i, j, 3] = cubeType.ROCK;
-      }
-    }
-
-    // place rock
-    for(int i = 0; i< 2; i++)
-    {
-      for(int j = 0; j < 2; j++)
-      {
-        GameObject baseCube = Instantiate(cube, new Vector3(i+7, 1, j+3), Quaternion.identity, TerrainHolder.transform) as GameObject;
-        GameObject topCube = Instantiate(cube, new Vector3(i+7, 2, j+3), Quaternion.identity, TerrainHolder.transform) as GameObject;
-        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Rock") as Material;
-        topCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Rock") as Material;
-        worldLayout[i+7, 1, j+3] = cubeType.ROCK;
-        worldLayout[i+7, 2, j+3] = cubeType.ROCK;
-      }
-    }
-
-    //make a platuea
-    for(int i = 0; i < 4; i++)
-    {
-      for(int j = 0; j<4; j++)
-      {
-        GameObject baseCube = Instantiate(cube, new Vector3(i + 15, 1, j + 13), Quaternion.identity, TerrainHolder.transform) as GameObject;
-        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-        worldLayout[i + 15, 1, j + 13] = cubeType.GRASS;
-      }
-    }
-    for(int i = 0; i<2; i++)
-    {
-      for(int j = 0; j < 2; j++)
-      {
-        GameObject baseCube = Instantiate(cube, new Vector3(i + 15, 2, j + 13), Quaternion.identity, TerrainHolder.transform) as GameObject;
-        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-        worldLayout[i + 15, 2, j + 13] = cubeType.GRASS;
-      }
-    }
     // Instantiate characters
     // TODO
-    testPathChar =Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(10f, 2f, 10f), Quaternion.identity) as GameObject;
+    testPathChar = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(10f, 2f, 10f), Quaternion.identity) as GameObject;
     testPathChar.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
   }
 
@@ -149,6 +91,7 @@ public class UnitTestBaseController : MonoBehaviour {
 
     #endregion
 
+    Color emissionColor = new Color(0.045f, 0.875f, 0.84f);
     //Raycast mouse 0
     if (Input.GetMouseButtonDown(0))
     {
@@ -162,7 +105,13 @@ public class UnitTestBaseController : MonoBehaviour {
         // Do something with the object that was hit by the raycast.
         if(objectHit.GetComponent<Selectable>() != null)
         {
+          if (selected != null) changeEmission(selected, Color.black); // Color.black means no emission.
+
           selected = objectHit.gameObject;
+          changeEmission(selected, emissionColor);
+        } else if (selected != null) {
+          changeEmission(selected, Color.black);
+          selected = null;
         }
       }
     }
@@ -194,7 +143,7 @@ public class UnitTestBaseController : MonoBehaviour {
       {
         Vector3 selectedCubePos = selected.GetComponent<Character>().GetGridPosition();
         Vector3 testCubePos = testPathChar.GetComponent<Character>().GetGridPosition();
-        List<PathNode> path = AStar.ShortestPath(worldLayout, new bool[200, 20, 200],
+        List<PathNode> path = AStar.ShortestPath(TerrainController.worldLayout, new bool[200, 20, 200],
           (int)testCubePos.x, (int)testCubePos.y, (int)testCubePos.z,
           (int)selectedCubePos.x, (int)selectedCubePos.y, (int)selectedCubePos.z);
         testPathChar.GetComponent<Character>().Path = path;
@@ -214,6 +163,15 @@ public class UnitTestBaseController : MonoBehaviour {
     }
   }
 
+  private void changeEmission(GameObject gObj, Color c)
+  {
+    var emissionColor = c;
+    Renderer[] gObjRenderers = gObj.GetComponentsInChildren<Renderer>();
+    foreach (Renderer r in gObjRenderers) {
+      r.material.SetColor("_EmissionColor", emissionColor);
+    }
+  }
+
   private void instantiateBlueprint(cubeType[,,] blueprint, Vector3 baseVector)
   {
     for (int i = 0; i < blueprint.GetLength(0); i++)
@@ -229,60 +187,24 @@ public class UnitTestBaseController : MonoBehaviour {
               //Air
               break;
             case cubeType.WOOD:
-              if (worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == cubeType.NONE)
+              if (TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == cubeType.NONE)
               {
                 tempStruc = Instantiate(cube, baseVector + new Vector3(i, j, k), Quaternion.identity) as GameObject;
                 tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Wood") as Material;
-                worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = cubeType.WOOD;
+                TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = cubeType.WOOD;
               }
               break;
             case cubeType.GRASS:
-              if (worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == cubeType.NONE)
+              if (TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == cubeType.NONE)
               {
                 tempStruc = Instantiate(cube, baseVector + new Vector3(i, j, k), Quaternion.identity) as GameObject;
                 tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-                worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = cubeType.GRASS;
+                TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = cubeType.GRASS;
               }
               break;
           }
         }
       }
     }
-  }
-
-
-  private void generateWorld()
-  {
-    // Noise height
-    int[,] height = new int[200, 200];
-    for (int i = 0; i < height.GetLength(0); i++)
-    {
-      for (int j = 0; j < height.GetLength(1); j++)
-      {
-        height[i, j] = Random.Range(0, 4);
-      }
-    }
-    //Noise grass
-    int[,] grass = new int[200, 200];
-    for (int i = 0; i < grass.GetLength(0); i++)
-    {
-      for (int j = 0; j < grass.GetLength(1); j++)
-      {
-        grass[i, j] = Random.Range(0, 4);
-      }
-    }
-
-    //Instantiate
-    //test with grass
-    for (int i = 0; i < 200; i++)
-    {
-      for (int j = 0; j < 200; j++)
-      {
-        GameObject baseCube = Instantiate(cube, new Vector3(i, height[i, j], j), Quaternion.identity) as GameObject;
-        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-        worldLayout[i, 0, j] = cubeType.GRASS;
-      }
-    }
-
   }
 }
