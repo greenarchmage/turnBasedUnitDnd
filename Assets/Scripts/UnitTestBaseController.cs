@@ -28,6 +28,9 @@ public class UnitTestBaseController : MonoBehaviour {
     // TODO
     testPathChar = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(10f, 2f, 10f), Quaternion.identity) as GameObject;
     testPathChar.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
+
+    GameObject fightChar = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(12f, 2f, 12f), Quaternion.identity) as GameObject;
+    fightChar.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
   }
 
   // Update is called once per frame
@@ -131,6 +134,11 @@ public class UnitTestBaseController : MonoBehaviour {
           if(objectHit.GetComponent<MeshRenderer>().material.name == "Grass (Instance)")
           {
             selected.transform.position = objectHit.position + new Vector3(0f, (selected.transform.localScale.y/2) +0.5f, 0f);
+          } else if(objectHit.GetComponent<Character>() != null && selected != null && selected.GetComponent<Character>() != null)
+          {
+            Character hitChar = objectHit.GetComponent<Character>();
+            Character attackChar = selected.GetComponent<Character>();
+            attackChar.AttackCharacter(hitChar);
           }
         }
       }

@@ -1,23 +1,26 @@
-﻿using System;
+﻿using Assets.Scripts.Items;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace Assets.Scripts.Character
 {
-  public class CharacterStats
+  public class CharacterData
   {
-    public int Hitpoints { get; set; }
+    public int Hitpoints { get; private set; }
     public float MovementSpeed { get; set; }
-    public int Damage { get; set; }
+    
+    public int CurrentHitpoints { get; set; }
+    public Weapon EquipedWeapon { get; set; }
 
-    public CharacterStats() { }
+    public CharacterData() { }
 
-    public CharacterStats(int hitpoints, float movementspeed, int damage)
+    public CharacterData(int hitpoints, float movementspeed)
     {
       Hitpoints = hitpoints;
+      CurrentHitpoints = hitpoints;
       MovementSpeed = movementspeed;
-      Damage = damage;
     }
   }
 }

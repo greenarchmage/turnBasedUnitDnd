@@ -11,7 +11,7 @@ namespace Assets.Scripts.Character
   {
     public List<PathNode> Path { get; set; }
 
-    public CharacterStats Stats { get; set; }
+    public CharacterData Stats { get; set; }
 
     public Player Owner { get; set; }
     public float MoveLeft { get; set; }
@@ -34,6 +34,50 @@ namespace Assets.Scripts.Character
       float y = transform.position.y - (transform.localScale.y / 2f) + 0.5f;
       float z = transform.position.z;
       return new Vector3(x, y, z);
+    }
+
+    public void AttackCharacter(Character target)
+    {
+      //TODO Do unarmed???
+      if (Stats.EquipedWeapon != null)
+      {
+        if (Stats.EquipedWeapon.Range >= Mathf.FloorToInt(Vector3.Distance(target.GetGridPosition(), GetGridPosition())))
+        {
+          Debug.Log("Attacking character " + target.name);
+          int damageDealt = (UnityEngine.Random.Range(0, Stats.EquipedWeapon.DamageDie) + 1) * -1;
+          if (target.ChangeHitpoints(damageDealt))
+          {
+            Debug.Log("Target still alive");
+          }
+          else
+          {
+            Debug.Log("Target is dead");
+            Destroy(target.gameObject);
+          }
+        }
+        else
+        {
+          Debug.Log("Out of range");
+        }
+      }
+    }
+    /// <summary>
+    /// Change the hitpoints of the character.
+    /// Clamped between 0 and the max hitpoints of the character
+    /// </summary>
+    /// <param name="change">The amount to change the hitpoints, positive add, negative subtracts</param>
+    /// <returns></returns>
+    public bool ChangeHitpoints(int change)
+    {
+      Stats.CurrentHitpoints += change;
+      Stats.CurrentHitpoints = Mathf.Clamp(Stats.CurrentHitpoints, 0, Stats.Hitpoints);
+      if(Stats.CurrentHitpoints <= 0)
+      {
+        return false;
+      } else
+      {
+        return true;
+      }
     }
   }
 }

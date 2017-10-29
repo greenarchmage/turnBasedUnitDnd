@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Items;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,9 +8,9 @@ namespace Assets.Scripts.Character
 {
   public class CharacterPresets
   {
-    public static CharacterStats CreateWarrior()
+    public static CharacterData CreateWarrior()
     {
-      return new CharacterStats(10,10,2);
+      return new CharacterData(10, 10) { EquipedWeapon = Weapon.CreateSpear() };
     }
   }
 }
