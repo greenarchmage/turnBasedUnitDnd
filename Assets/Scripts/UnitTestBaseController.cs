@@ -7,10 +7,7 @@ using Assets.Scripts.World;
 using Assets.Scripts.Character;
 
 public class UnitTestBaseController : MonoBehaviour {
-  public GameObject CameraHolder;
-
   private GameObject cube;
-  private float camSpeed = 5;
 
   private GameObject selected;
 
@@ -36,64 +33,6 @@ public class UnitTestBaseController : MonoBehaviour {
   // Update is called once per frame
   void Update()
   {
-    #region CameraControls
-    //Camera movement keyboard
-    // Works at any rotation
-    if (Input.GetKey(KeyCode.W))
-    {
-      CameraHolder.transform.Translate(new Vector3(0, 1, 0) * camSpeed / 10);
-    }
-    if (Input.GetKey(KeyCode.S))
-    {
-      CameraHolder.transform.Translate(new Vector3(0, -1, 0) * camSpeed / 10);
-    }
-    if (Input.GetKey(KeyCode.A))
-    {
-      CameraHolder.transform.Translate(new Vector3(1, 0, -1) * -camSpeed / 10);
-    }
-    if (Input.GetKey(KeyCode.D))
-    {
-      CameraHolder.transform.Translate(new Vector3(1, 0, -1) * camSpeed / 10);
-    }
-    //Rotate 
-    if (Input.GetKeyDown(KeyCode.Q))
-    {
-      CameraHolder.transform.RotateAround(new Vector3(
-      Mathf.Sin(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
-      Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * Camera.main.transform.parent.position.y,
-      0,
-      Mathf.Cos(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
-      Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * Camera.main.transform.parent.position.y
-      )
-      , Vector3.up, 90);
-    }
-    if (Input.GetKeyDown(KeyCode.E))
-    {
-      CameraHolder.transform.RotateAround(new Vector3(
-      Mathf.Sin(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
-      Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * CameraHolder.transform.position.y,
-      0,
-      Mathf.Cos(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
-      Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * CameraHolder.transform.position.y
-      )
-      , Vector3.up, -90);
-    }
-
-    //zoom
-    if (Input.GetAxis("Mouse ScrollWheel") > 0)
-    {
-      float newCamSize = Mathf.Clamp(Camera.main.orthographicSize - 1, 1.0f, 20.0f);
-      Camera.main.orthographicSize = newCamSize;
-    }
-
-    if (Input.GetAxis("Mouse ScrollWheel") < 0)
-    {
-      float newCamSize = Mathf.Clamp(Camera.main.orthographicSize + 1, 1.0f, 20.0f);
-      Camera.main.orthographicSize = newCamSize;
-    }
-
-    #endregion
-
     Color emissionColor = new Color(0.045f, 0.875f, 0.84f);
     //Raycast mouse 0
     if (Input.GetMouseButtonDown(0))
