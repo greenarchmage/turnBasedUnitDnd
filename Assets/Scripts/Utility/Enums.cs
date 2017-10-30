@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Assets.Scripts.Utility
 {
-    public enum cubeType
+    public enum CubeType
     {
         NONE,
         WOOD,

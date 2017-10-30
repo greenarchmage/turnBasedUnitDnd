@@ -6,9 +6,9 @@ public class TestController : MonoBehaviour {
 
     private GameObject cube;
     private float camSpeed = 5;
-    private cubeType[,,] worldLayout = new cubeType[200,20,200];
+    private CubeType[,,] worldLayout = new CubeType[200,20,200];
 
-    private cubeType[,,] blueprint;
+    private CubeType[,,] blueprint;
     // Use this for initialization
     void Start () {
         // load prefab
@@ -59,12 +59,12 @@ public class TestController : MonoBehaviour {
         }
         */
         //BlueprintTest
-        blueprint = new cubeType[3,3,3];
+        blueprint = new CubeType[3,3,3];
         for (int i = 0; i < 2; i++)
         {
             for (int j = 0; j < 2; j++)
             {
-                blueprint[i * 2, j, 0] = cubeType.WOOD;
+                blueprint[i * 2, j, 0] = CubeType.WOOD;
             }
         }
 
@@ -72,7 +72,7 @@ public class TestController : MonoBehaviour {
         {
             for (int j = 0; j < 2; j++)
             {
-                blueprint[i * 2, j, 2] = cubeType.WOOD;
+                blueprint[i * 2, j, 2] = CubeType.WOOD;
             }
         }
 
@@ -80,7 +80,7 @@ public class TestController : MonoBehaviour {
         {
             for (int j = 0; j < 3; j++)
             {
-                blueprint[i, 2, j] = cubeType.WOOD;
+                blueprint[i, 2, j] = CubeType.WOOD;
             }
         }
         instantiateBlueprint(blueprint, new Vector3(7,1,3));
@@ -139,7 +139,7 @@ public class TestController : MonoBehaviour {
         }
     }
     
-    private void instantiateBlueprint(cubeType[,,] blueprint, Vector3 baseVector)
+    private void instantiateBlueprint(CubeType[,,] blueprint, Vector3 baseVector)
     {
         for (int i = 0; i < blueprint.GetLength(0); i++)
         {
@@ -150,23 +150,23 @@ public class TestController : MonoBehaviour {
                     GameObject tempStruc = null;
                     switch (blueprint[i, j, k])
                     {
-                        case cubeType.NONE:
+                        case CubeType.NONE:
                             //Air
                             break;
-                        case cubeType.WOOD:
-                            if (worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == cubeType.NONE)
+                        case CubeType.WOOD:
+                            if (worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == CubeType.NONE)
                             {
                                 tempStruc = Instantiate(cube, baseVector + new Vector3(i, j, k), Quaternion.identity) as GameObject;
                                 tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Wood") as Material;
-                                worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = cubeType.WOOD;
+                                worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = CubeType.WOOD;
                             }
                             break;
-                        case cubeType.GRASS:
-                            if (worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == cubeType.NONE)
+                        case CubeType.GRASS:
+                            if (worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == CubeType.NONE)
                             {
                                 tempStruc = Instantiate(cube, baseVector + new Vector3(i, j, k), Quaternion.identity) as GameObject;
                                 tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-                                worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = cubeType.GRASS;
+                                worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = CubeType.GRASS;
                             }
                             break;
                     }
@@ -205,7 +205,7 @@ public class TestController : MonoBehaviour {
             {
                 GameObject baseCube = Instantiate(cube, new Vector3(i, height[i,j], j), Quaternion.identity) as GameObject;
                 baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-                worldLayout[i, 0, j] = cubeType.GRASS;
+                worldLayout[i, 0, j] = CubeType.GRASS;
             }
         }
 

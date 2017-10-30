@@ -22,7 +22,7 @@ namespace Assets.Scripts.AI
         {
           Vector3 thisPos = thisChar.GetGridPosition();
           Vector3 cPos = c.GetGridPosition();
-          List<Pathfinding.PathNode> path = Pathfinding.AStar.ShortestPath((Utility.cubeType[,,])data["terrainLayout"], (bool[,,])data["obstructed"],
+          List<Pathfinding.PathNode> path = Pathfinding.AStar.ShortestPath((Utility.CubeType[,,])data["terrainLayout"], (bool[,,])data["obstructed"],
             (int)thisPos.x, (int)thisPos.y, (int)thisPos.z,
           (int)cPos.x, (int)cPos.y, (int)cPos.z);
           if(shortPath == null || PathLength(path) < PathLength(shortPath))

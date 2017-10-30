@@ -119,7 +119,7 @@ public class UnitTestBaseController : MonoBehaviour {
     }
   }
 
-  private void instantiateBlueprint(cubeType[,,] blueprint, Vector3 baseVector)
+  private void instantiateBlueprint(CubeType[,,] blueprint, Vector3 baseVector)
   {
     for (int i = 0; i < blueprint.GetLength(0); i++)
     {
@@ -130,23 +130,23 @@ public class UnitTestBaseController : MonoBehaviour {
           GameObject tempStruc = null;
           switch (blueprint[i, j, k])
           {
-            case cubeType.NONE:
+            case CubeType.NONE:
               //Air
               break;
-            case cubeType.WOOD:
-              if (TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == cubeType.NONE)
+            case CubeType.WOOD:
+              if (TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == CubeType.NONE)
               {
                 tempStruc = Instantiate(cube, baseVector + new Vector3(i, j, k), Quaternion.identity) as GameObject;
                 tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Wood") as Material;
-                TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = cubeType.WOOD;
+                TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = CubeType.WOOD;
               }
               break;
-            case cubeType.GRASS:
-              if (TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == cubeType.NONE)
+            case CubeType.GRASS:
+              if (TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == CubeType.NONE)
               {
                 tempStruc = Instantiate(cube, baseVector + new Vector3(i, j, k), Quaternion.identity) as GameObject;
                 tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-                TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = cubeType.GRASS;
+                TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = CubeType.GRASS;
               }
               break;
           }
