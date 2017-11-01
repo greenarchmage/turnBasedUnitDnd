@@ -6,11 +6,11 @@ namespace Assets.Scripts.AI.BehaviourTree.Base
   public class CompositeNode : BehaviourTreeNode
   {
 
-    public List<BehaviourTreeNode> children;
+    public List<BehaviourTreeNode> Children;
 
-    public CompositeNode(BehaviourTree tree, BehaviourTreeNode parent, string tag) : base(tree, parent, tag)
+    public CompositeNode(BehaviourTree tree, BehaviourTreeNode parent) : base(tree, parent)
     {
-      this.children = new List<BehaviourTreeNode>();
+      this.Children = new List<BehaviourTreeNode>();
     }
 
     public override NodeStatus Tick()

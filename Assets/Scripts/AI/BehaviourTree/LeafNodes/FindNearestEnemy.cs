@@ -10,7 +10,7 @@ namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
 {
   public class FindNearestEnemy : LeafNode
   {
-    public FindNearestEnemy(BehaviourTree tree, BehaviourTreeNode parent, string tag) : base(tree, parent, tag)
+    public FindNearestEnemy(BehaviourTree tree, BehaviourTreeNode parent) : base(tree, parent)
     {
     }
 
@@ -27,7 +27,7 @@ namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
         {
           Vector3 thisPos = thisChar.GetGridPosition();
           Vector3 cPos = c.GetGridPosition();
-          List<Pathfinding.PathNode> path = Pathfinding.AStar.ShortestPath((Utility.cubeType[,,])tree.treeData[BehaviourTreeData.WorldLayout], 
+          List<Pathfinding.PathNode> path = Pathfinding.AStar.ShortestPath((Utility.CubeType[,,])tree.treeData[BehaviourTreeData.WorldLayout], 
             (bool[,,])tree.treeData[BehaviourTreeData.WorldLayoutObstructed],
             (int)thisPos.x, (int)thisPos.y, (int)thisPos.z,
           (int)cPos.x, (int)cPos.y, (int)cPos.z);
@@ -39,6 +39,8 @@ namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
       }
       if(shortPath != null)
       {
+        Debug.Log("Distance to closest Enemy " + PathLength(shortPath));
+        tree.AddDataToTree(BehaviourTreeData.ShortestPath, shortPath);
         return NodeStatus.Success;
       } else
       {

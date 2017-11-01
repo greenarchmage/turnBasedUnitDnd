@@ -7,7 +7,7 @@ namespace Assets.Scripts.AI.BehaviourTree.Base
 
     public BehaviourTreeNode child;
 
-    public DecoratorNode(BehaviourTree tree, BehaviourTreeNode parent, string tag) : base(tree, parent, tag)
+    public DecoratorNode(BehaviourTree tree, BehaviourTreeNode parent) : base(tree, parent)
     {
 
     }

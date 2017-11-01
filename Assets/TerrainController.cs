@@ -11,7 +11,7 @@ public class TerrainController : MonoBehaviour
 
   public GameObject TerrainHolder;
   private GameObject terrainCube;
-  public cubeType[,,] worldLayout = new cubeType[200, 20, 200];
+  public CubeType[,,] worldLayout = new CubeType[200, 20, 200];
 
   void Start()
   {
@@ -22,7 +22,7 @@ public class TerrainController : MonoBehaviour
       for (int j = 0; j < 20; j++) {
         GameObject baseCube = Instantiate(terrainCube, new Vector3(i, 0, j), Quaternion.identity, TerrainHolder.transform) as GameObject;
         baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-        worldLayout[i, 0, j] = cubeType.GRASS;
+        worldLayout[i, 0, j] = CubeType.GRASS;
       }
     }
 
@@ -31,7 +31,7 @@ public class TerrainController : MonoBehaviour
       for (int j = 1; j < 3; j++) {
         GameObject baseCube = Instantiate(terrainCube, new Vector3(i, j, 3), Quaternion.identity, TerrainHolder.transform) as GameObject;
         baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Rock") as Material;
-        worldLayout[i, j, 3] = cubeType.ROCK;
+        worldLayout[i, j, 3] = CubeType.ROCK;
       }
     }
 
@@ -42,8 +42,8 @@ public class TerrainController : MonoBehaviour
         GameObject topCube = Instantiate(terrainCube, new Vector3(i + 7, 2, j + 3), Quaternion.identity, TerrainHolder.transform) as GameObject;
         baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Rock") as Material;
         topCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Rock") as Material;
-        worldLayout[i + 7, 1, j + 3] = cubeType.ROCK;
-        worldLayout[i + 7, 2, j + 3] = cubeType.ROCK;
+        worldLayout[i + 7, 1, j + 3] = CubeType.ROCK;
+        worldLayout[i + 7, 2, j + 3] = CubeType.ROCK;
       }
     }
 
@@ -52,14 +52,14 @@ public class TerrainController : MonoBehaviour
       for (int j = 0; j < 4; j++) {
         GameObject baseCube = Instantiate(terrainCube, new Vector3(i + 15, 1, j + 13), Quaternion.identity, TerrainHolder.transform) as GameObject;
         baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-        worldLayout[i + 15, 1, j + 13] = cubeType.GRASS;
+        worldLayout[i + 15, 1, j + 13] = CubeType.GRASS;
       }
     }
     for (int i = 0; i < 2; i++) {
       for (int j = 0; j < 2; j++) {
         GameObject baseCube = Instantiate(terrainCube, new Vector3(i + 15, 2, j + 13), Quaternion.identity, TerrainHolder.transform) as GameObject;
         baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-        worldLayout[i + 15, 2, j + 13] = cubeType.GRASS;
+        worldLayout[i + 15, 2, j + 13] = CubeType.GRASS;
       }
     }
   }

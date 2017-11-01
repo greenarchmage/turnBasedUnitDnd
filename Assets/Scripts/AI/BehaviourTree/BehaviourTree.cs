@@ -12,7 +12,7 @@ namespace Assets.Scripts.AI.BehaviourTree
     AllCharacters,
     WorldLayout,
     WorldLayoutObstructed,
-    SortedDesires,
+    ShortestPath,
     DesireDestination,
     SetNewDestAllowed,
     DesireTimeStart,
@@ -28,7 +28,7 @@ namespace Assets.Scripts.AI.BehaviourTree
 
     public BehaviourTree(GameObject owner)
     {
-      root = new SelectorNode(this, null, "rootSelector");
+      root = new SequenceNode(this, null);
       this.owner = owner;
       this.treeData = new Dictionary<BehaviourTreeData, object>();
     }

@@ -5,6 +5,8 @@ using Assets.Scripts.Utility;
 using Assets.Scripts.Pathfinding;
 using Assets.Scripts.World;
 using Assets.Scripts.Character;
+using Assets.Scripts.AI.BehaviourTree;
+using Assets.Scripts.AI.BehaviourTree.CompositeNodes;
 
 public class UnitTestBaseController : MonoBehaviour {
   public GameObject CameraHolder;
@@ -18,8 +20,9 @@ public class UnitTestBaseController : MonoBehaviour {
 
   public TerrainController TerrainController;
 
+  private List<Character> allCharacters;
 
-
+  private BehaviourTree testTree;
   // Use this for initialization
   void Start()
   {
@@ -28,11 +31,25 @@ public class UnitTestBaseController : MonoBehaviour {
 
     // Instantiate characters
     // TODO
+    allCharacters = new List<Character>();
+
     testPathChar = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(10f, 2f, 10f), Quaternion.identity) as GameObject;
     testPathChar.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
+    testPathChar.GetComponent<Character>().Owner = new Assets.Scripts.Player() { Name = "Alex" };
+    allCharacters.Add(testPathChar.GetComponent<Character>());
 
     GameObject fightChar = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(12f, 2f, 12f), Quaternion.identity) as GameObject;
     fightChar.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
+    fightChar.GetComponent<Character>().Owner = new Assets.Scripts.Player() { Name = "Simba" };
+    allCharacters.Add(fightChar.GetComponent<Character>());
+
+    testTree = new BehaviourTree(testPathChar);
+    ((SequenceNode)testTree.root).Children.Add(new Assets.Scripts.AI.BehaviourTree.LeafNodes.FindNearestEnemy(testTree, testTree.root));
+    ((SequenceNode)testTree.root).Children.Add(new Assets.Scripts.AI.BehaviourTree.LeafNodes.MoveWithinRangeNearestEnemy(testTree, testTree.root));
+    testTree.AddDataToTree(BehaviourTreeData.AllCharacters, allCharacters);
+    testTree.AddDataToTree(BehaviourTreeData.CurrentCharacter, testPathChar.GetComponent<Character>());
+    testTree.AddDataToTree(BehaviourTreeData.WorldLayout, TerrainController.worldLayout);
+    testTree.AddDataToTree(BehaviourTreeData.WorldLayoutObstructed, new bool[200, 20, 200]);
   }
 
   // Update is called once per frame
@@ -170,6 +187,9 @@ public class UnitTestBaseController : MonoBehaviour {
     if (Input.GetKeyDown(KeyCode.Return))
     {
       testPathChar.GetComponent<Character>().MoveLeft = testPathChar.GetComponent<Character>().Stats.MovementSpeed;
+
+      // Run test tick of BehaviorTree
+      testTree.Tick();
     }
   }
 
@@ -182,7 +202,7 @@ public class UnitTestBaseController : MonoBehaviour {
     }
   }
 
-  private void instantiateBlueprint(cubeType[,,] blueprint, Vector3 baseVector)
+  private void instantiateBlueprint(CubeType[,,] blueprint, Vector3 baseVector)
   {
     for (int i = 0; i < blueprint.GetLength(0); i++)
     {
@@ -193,23 +213,23 @@ public class UnitTestBaseController : MonoBehaviour {
           GameObject tempStruc = null;
           switch (blueprint[i, j, k])
           {
-            case cubeType.NONE:
+            case CubeType.NONE:
               //Air
               break;
-            case cubeType.WOOD:
-              if (TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == cubeType.NONE)
+            case CubeType.WOOD:
+              if (TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == CubeType.NONE)
               {
                 tempStruc = Instantiate(cube, baseVector + new Vector3(i, j, k), Quaternion.identity) as GameObject;
                 tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Wood") as Material;
-                TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = cubeType.WOOD;
+                TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = CubeType.WOOD;
               }
               break;
-            case cubeType.GRASS:
-              if (TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == cubeType.NONE)
+            case CubeType.GRASS:
+              if (TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == CubeType.NONE)
               {
                 tempStruc = Instantiate(cube, baseVector + new Vector3(i, j, k), Quaternion.identity) as GameObject;
                 tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-                TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = cubeType.GRASS;
+                TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = CubeType.GRASS;
               }
               break;
           }

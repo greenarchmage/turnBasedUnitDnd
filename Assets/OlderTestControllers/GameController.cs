@@ -17,11 +17,11 @@ public class GameController : MonoBehaviour {
 
     private GameObject cube;
     private float camSpeed = 5;
-    private cubeType[,,] worldLayout;
+    private CubeType[,,] worldLayout;
     private bool[,,] visible;
     // Use this for initialization
     void Start () {
-        worldLayout = new cubeType[worldx, worldy, worldz];
+        worldLayout = new CubeType[worldx, worldy, worldz];
         visible = new bool[worldx, worldy, worldz];
         cube = Resources.Load("Prefabs/cube") as GameObject;
         // TODO: temp function, should use better algorithm to generate level
@@ -124,7 +124,7 @@ public class GameController : MonoBehaviour {
     /// </summary>
     /// <param name="blueprint"></param>
     /// <param name="baseVector"></param>
-    private void instantiateBlueprint(cubeType[,,] blueprint, Vector3 baseVector)
+    private void instantiateBlueprint(CubeType[,,] blueprint, Vector3 baseVector)
     {
         for (int i = 0; i < blueprint.GetLength(0); i++)
         {
@@ -135,18 +135,18 @@ public class GameController : MonoBehaviour {
                     GameObject tempStruc = null;
                     switch (blueprint[i, j, k])
                     {
-                        case cubeType.NONE:
+                        case CubeType.NONE:
                             //Air
                             break;
-                        case cubeType.WOOD:
+                        case CubeType.WOOD:
                             tempStruc = Instantiate(cube, baseVector + new Vector3(i, j, k), Quaternion.identity) as GameObject;
                             tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Wood") as Material;
-                            worldLayout[i, j, k] = cubeType.WOOD;
+                            worldLayout[i, j, k] = CubeType.WOOD;
                             break;
-                        case cubeType.GRASS:
+                        case CubeType.GRASS:
                             tempStruc = Instantiate(cube, baseVector + new Vector3(i, j, k), Quaternion.identity) as GameObject;
                             tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-                            worldLayout[i, j, k] = cubeType.GRASS;
+                            worldLayout[i, j, k] = CubeType.GRASS;
                             break;
                     }
                 }
@@ -196,7 +196,7 @@ public class GameController : MonoBehaviour {
                         //Create block at location
                         instantiateBlockType(new Vector3(xt, yt, zt), worldLayout[xt, yt, zt]);
                         //Debug.Log(visible[xt, yt, zt]);
-                        if(worldLayout[xt,yt,zt] == cubeType.NONE && count < 15)
+                        if(worldLayout[xt,yt,zt] == CubeType.NONE && count < 15)
                         {
                             coordNone.Add(new Vector3(xt, yt, zt));
                             //recursive strat
@@ -218,23 +218,23 @@ public class GameController : MonoBehaviour {
     /// </summary>
     /// <param name="pos"></param>
     /// <param name="type"></param>
-    private void instantiateBlockType(Vector3 pos, cubeType type)
+    private void instantiateBlockType(Vector3 pos, CubeType type)
     {
         //Debug.Log("Cube start");
         visible[(int)pos.x, (int)pos.y, (int)pos.z] = true;
         worldLayout[(int)pos.x, (int)pos.y, (int)pos.z] = type;
         switch (type)
         {
-            case cubeType.NONE:
+            case CubeType.NONE:
                 //Air
                 break;
-            case cubeType.WOOD:
+            case CubeType.WOOD:
                 instantiateCube(pos, "Wood");
                 break;
-            case cubeType.GRASS:
+            case CubeType.GRASS:
                 instantiateCube(pos, "Grass");
                 break;
-            case cubeType.ROCK:
+            case CubeType.ROCK:
                 instantiateCube(pos, "Rock");
                 break;
         }
@@ -282,15 +282,15 @@ public class GameController : MonoBehaviour {
             {
                 for( int y = 0; y< height[i, j]; y++)
                 {
-                    worldLayout[i, y, j] = cubeType.ROCK;
+                    worldLayout[i, y, j] = CubeType.ROCK;
                 }
                 for(int x = 0; x< grass[i,j]; x++)
                 {
-                    worldLayout[i, height[i, j]+x, j] = cubeType.GRASS;
+                    worldLayout[i, height[i, j]+x, j] = CubeType.GRASS;
                 }
                 for(int z = grass[i, j]+ height[i, j]; z<visible.GetLength(1); z++)
                 {
-                    worldLayout[i, z, j] = cubeType.NONE;
+                    worldLayout[i, z, j] = CubeType.NONE;
                 }
             }
         }
@@ -312,40 +312,40 @@ public class GameController : MonoBehaviour {
                 //traverse height last to ensure the fewest runs
                 for (int y = worldy-1; y >= 0; y--)
                 {
-                    if (worldLayout[x, y, z] == cubeType.NONE)
+                    if (worldLayout[x, y, z] == CubeType.NONE)
                     {
                         continue;
                     }
                     int found = 0;
                     //Check for none x
-                    if( x+1 >= worldx || worldLayout[x+1, y, z] != cubeType.NONE)
+                    if( x+1 >= worldx || worldLayout[x+1, y, z] != CubeType.NONE)
                     {
                         //increment found
                         found++;
                     }
-                    if(x-1 < 0 ||worldLayout[x-1,y,z] != cubeType.NONE)
+                    if(x-1 < 0 ||worldLayout[x-1,y,z] != CubeType.NONE)
                     {
                         found++;
                     }
 
                     //Check y
-                    if (y + 1 >= worldy || worldLayout[x, y+1, z] != cubeType.NONE)
+                    if (y + 1 >= worldy || worldLayout[x, y+1, z] != CubeType.NONE)
                     {
                         //increment found
                         found++;
                     }
-                    if (y - 1 < 0 || worldLayout[x, y-1, z] != cubeType.NONE)
+                    if (y - 1 < 0 || worldLayout[x, y-1, z] != CubeType.NONE)
                     {
                         found++;
                     }
 
                     //Check z
-                    if (z + 1 >= worldz || worldLayout[x, y, z+1] != cubeType.NONE)
+                    if (z + 1 >= worldz || worldLayout[x, y, z+1] != CubeType.NONE)
                     {
                         //increment found
                         found++;
                     }
-                    if (z - 1 < 0 || worldLayout[x, y, z-1] != cubeType.NONE)
+                    if (z - 1 < 0 || worldLayout[x, y, z-1] != CubeType.NONE)
                     {
                         found++;
                     }

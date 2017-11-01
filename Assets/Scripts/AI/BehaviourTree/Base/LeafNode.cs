@@ -13,7 +13,7 @@ namespace Assets.Scripts.AI.BehaviourTree.Base
     /// <param name="tree">The behavior tree for the node</param>
     /// <param name="parent">The parent node in the behavior tree</param>
     /// <param name="tag">Sub group tag</param>
-    public LeafNode(BehaviourTree tree, BehaviourTreeNode parent, string tag) : base(tree, parent, tag)
+    public LeafNode(BehaviourTree tree, BehaviourTreeNode parent) : base(tree, parent)
     {
 
     }
