@@ -10,7 +10,7 @@ namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
 {
   public class AttackTarget : LeafNode
   {
-    public AttackTarget(BehaviourTree tree, BehaviourTreeNode parent, string tag) : base(tree, parent, tag)
+    public AttackTarget(BehaviourTree tree, BehaviourTreeNode parent) : base(tree, parent)
     {
     }
 

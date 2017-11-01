@@ -10,7 +10,7 @@ namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
 {
   public class ResetActionPoints : LeafNode
   {
-    public ResetActionPoints(BehaviourTree tree, BehaviourTreeNode parent, string tag) : base(tree, parent, tag)
+    public ResetActionPoints(BehaviourTree tree, BehaviourTreeNode parent) : base(tree, parent)
     {
     }
 

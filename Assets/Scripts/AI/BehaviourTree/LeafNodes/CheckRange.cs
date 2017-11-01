@@ -10,7 +10,7 @@ namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
 {
   public class CheckRange : LeafNode
   {
-    public CheckRange(BehaviourTree tree, BehaviourTreeNode parent, string tag) : base(tree, parent, tag)
+    public CheckRange(BehaviourTree tree, BehaviourTreeNode parent) : base(tree, parent)
     {
     }
 
