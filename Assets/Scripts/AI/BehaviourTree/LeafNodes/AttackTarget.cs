@@ -17,8 +17,12 @@ namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
     public override NodeStatus Tick()
     {
       // using the character attack nearest target
-      // trigger the endturn, set the action points to 0 
-      // return success 
+      Assets.Scripts.Character.Character AICharacter = (Character.Character)tree.treeData[BehaviourTreeData.CurrentCharacter];
+      Character.Character target = (Character.Character)tree.treeData[BehaviourTreeData.CurrentTarget];
+      AICharacter.AttackCharacter(target);
+      // Set the action points to 0 and trigger end turn
+      AICharacter.ActionsPoins = 0;
+      tree.treeData[BehaviourTreeData.EndTurn] = true;
       return NodeStatus.Success;
     }
   }

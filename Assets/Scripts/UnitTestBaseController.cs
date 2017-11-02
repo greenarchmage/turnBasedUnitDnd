@@ -7,6 +7,8 @@ using Assets.Scripts.World;
 using Assets.Scripts.Character;
 using Assets.Scripts.AI.BehaviourTree;
 using Assets.Scripts.AI.BehaviourTree.CompositeNodes;
+using Assets.Scripts.AI.BehaviourTree.LeafNodes;
+using Assets.Scripts.AI.BehaviourTree.DecoratorNodes;
 
 public class UnitTestBaseController : MonoBehaviour {
   private GameObject cube;
@@ -41,12 +43,39 @@ public class UnitTestBaseController : MonoBehaviour {
     allCharacters.Add(fightChar.GetComponent<Character>());
 
     testTree = new BehaviourTree(testPathChar);
-    ((SequenceNode)testTree.root).Children.Add(new Assets.Scripts.AI.BehaviourTree.LeafNodes.FindNearestEnemy(testTree, testTree.root));
-    ((SequenceNode)testTree.root).Children.Add(new Assets.Scripts.AI.BehaviourTree.LeafNodes.MoveWithinRangeNearestEnemy(testTree, testTree.root));
+    //Startupsubtree reset the character and find the nearest enemy
+    SuccessNode startUpDecorator = new SuccessNode(testTree, testTree.root);
+    SequenceNode startUpSubTree = new SequenceNode(testTree, startUpDecorator);
+    startUpSubTree.Children.Add(new Startup(testTree, startUpSubTree));
+    startUpSubTree.Children.Add(new ResetActionPoints(testTree, startUpSubTree));
+    startUpSubTree.Children.Add(new FindNearestEnemy(testTree, startUpSubTree));
+
+    startUpDecorator.child = startUpSubTree;
+    ((SequenceNode)testTree.root).Children.Add(startUpDecorator);
+
+    //Attack subtree
+    InverterNode attackInverter = new InverterNode(testTree, testTree.root);
+    SequenceNode attackSubtree = new SequenceNode(testTree, attackInverter);
+    attackSubtree.Children.Add(new CheckRange(testTree, attackSubtree));
+    attackSubtree.Children.Add(new AttackTarget(testTree, attackSubtree));
+
+    attackInverter.child = attackSubtree;
+    ((SequenceNode)testTree.root).Children.Add(attackInverter);
+
+    //Movement subtree
+    ((SequenceNode)testTree.root).Children.Add(new Assets.Scripts.AI.BehaviourTree.LeafNodes.MoveTowardsNearestEnemy(testTree, testTree.root));
+
+    //((SequenceNode)testTree.root).Children.Add(new Assets.Scripts.AI.BehaviourTree.LeafNodes.FindNearestEnemy(testTree, testTree.root));
+    //((SequenceNode)testTree.root).Children.Add(new Assets.Scripts.AI.BehaviourTree.LeafNodes.MoveWithinRangeNearestEnemy(testTree, testTree.root));
+
+    // Tree data, this should be added/or available to all AI characters
     testTree.AddDataToTree(BehaviourTreeData.AllCharacters, allCharacters);
     testTree.AddDataToTree(BehaviourTreeData.CurrentCharacter, testPathChar.GetComponent<Character>());
     testTree.AddDataToTree(BehaviourTreeData.WorldLayout, TerrainController.worldLayout);
     testTree.AddDataToTree(BehaviourTreeData.WorldLayoutObstructed, new bool[200, 20, 200]);
+    testTree.AddDataToTree(BehaviourTreeData.StartUp, true);
+    testTree.AddDataToTree(BehaviourTreeData.EndTurn, true);
+    testPathChar.GetComponent<Character>().AIBehaviour = testTree;
   }
 
   // Update is called once per frame
@@ -92,11 +121,6 @@ public class UnitTestBaseController : MonoBehaviour {
           if(objectHit.GetComponent<MeshRenderer>().material.name == "Grass (Instance)")
           {
             selected.transform.position = objectHit.position + new Vector3(0f, (selected.transform.localScale.y/2) +0.5f, 0f);
-          } else if(objectHit.GetComponent<Character>() != null && selected != null && selected.GetComponent<Character>() != null)
-          {
-            Character hitChar = objectHit.GetComponent<Character>();
-            Character attackChar = selected.GetComponent<Character>();
-            attackChar.AttackCharacter(hitChar);
           }
         }
       }
@@ -125,10 +149,11 @@ public class UnitTestBaseController : MonoBehaviour {
     // reset MovementLeft test
     if (Input.GetKeyDown(KeyCode.Return))
     {
-      testPathChar.GetComponent<Character>().MoveLeft = testPathChar.GetComponent<Character>().Stats.MovementSpeed;
-
+      //testPathChar.GetComponent<Character>().MoveLeft = testPathChar.GetComponent<Character>().Stats.MovementSpeed;
+      testTree.AddDataToTree(BehaviourTreeData.StartUp, true);
+      testTree.AddDataToTree(BehaviourTreeData.EndTurn, false);
       // Run test tick of BehaviorTree
-      testTree.Tick();
+      //testTree.Tick();
     }
   }
 
