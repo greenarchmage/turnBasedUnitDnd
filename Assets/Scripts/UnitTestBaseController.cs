@@ -18,8 +18,7 @@ public class UnitTestBaseController : MonoBehaviour {
   private GameObject testPathChar;
 
   public TerrainController TerrainController;
-
-  private List<Character> allCharacters;
+  public AIController AIControllerObj;
 
   private BehaviourTree testTree;
   // Use this for initialization
@@ -30,17 +29,16 @@ public class UnitTestBaseController : MonoBehaviour {
 
     // Instantiate characters
     // TODO
-    allCharacters = new List<Character>();
 
     testPathChar = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(10f, 2f, 10f), Quaternion.identity) as GameObject;
     testPathChar.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
     testPathChar.GetComponent<Character>().Owner = new Assets.Scripts.Player() { Name = "Alex" };
-    allCharacters.Add(testPathChar.GetComponent<Character>());
+    AIControllerObj.AddCharacter(testPathChar.GetComponent<Character>());
 
     GameObject fightChar = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(12f, 2f, 12f), Quaternion.identity) as GameObject;
     fightChar.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
     fightChar.GetComponent<Character>().Owner = new Assets.Scripts.Player() { Name = "Simba" };
-    allCharacters.Add(fightChar.GetComponent<Character>());
+    AIControllerObj.AddCharacter(fightChar.GetComponent<Character>());
 
     testTree = new BehaviourTree(testPathChar);
     //Startupsubtree reset the character and find the nearest enemy
@@ -65,11 +63,8 @@ public class UnitTestBaseController : MonoBehaviour {
     //Movement subtree
     ((SequenceNode)testTree.root).Children.Add(new Assets.Scripts.AI.BehaviourTree.LeafNodes.MoveTowardsNearestEnemy(testTree, testTree.root));
 
-    //((SequenceNode)testTree.root).Children.Add(new Assets.Scripts.AI.BehaviourTree.LeafNodes.FindNearestEnemy(testTree, testTree.root));
-    //((SequenceNode)testTree.root).Children.Add(new Assets.Scripts.AI.BehaviourTree.LeafNodes.MoveWithinRangeNearestEnemy(testTree, testTree.root));
-
     // Tree data, this should be added/or available to all AI characters
-    testTree.AddDataToTree(BehaviourTreeData.AllCharacters, allCharacters);
+    testTree.AddDataToTree(BehaviourTreeData.AllCharacters, AIControllerObj.AllCharacters);
     testTree.AddDataToTree(BehaviourTreeData.CurrentCharacter, testPathChar.GetComponent<Character>());
     testTree.AddDataToTree(BehaviourTreeData.WorldLayout, TerrainController.worldLayout);
     testTree.AddDataToTree(BehaviourTreeData.WorldLayoutObstructed, new bool[200, 20, 200]);
@@ -149,11 +144,7 @@ public class UnitTestBaseController : MonoBehaviour {
     // reset MovementLeft test
     if (Input.GetKeyDown(KeyCode.Return))
     {
-      //testPathChar.GetComponent<Character>().MoveLeft = testPathChar.GetComponent<Character>().Stats.MovementSpeed;
-      testTree.AddDataToTree(BehaviourTreeData.StartUp, true);
-      testTree.AddDataToTree(BehaviourTreeData.EndTurn, false);
-      // Run test tick of BehaviorTree
-      //testTree.Tick();
+      AIControllerObj.StartAITurn();
     }
   }
 
