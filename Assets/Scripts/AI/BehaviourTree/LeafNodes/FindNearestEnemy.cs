@@ -20,7 +20,7 @@ namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
       List<Character.Character> listOfCharacters = (List<Character.Character>)tree.treeData[BehaviourTreeData.AllCharacters];
 
       List<Pathfinding.PathNode> shortPath = null;
-
+      Character.Character target = null;
       foreach (Character.Character c in listOfCharacters)
       {
         if (c.Owner.Name != thisChar.Owner.Name)
@@ -34,13 +34,14 @@ namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
           if (shortPath == null || PathLength(path) < PathLength(shortPath))
           {
             shortPath = path;
+            target = c;
           }
         }
       }
       if(shortPath != null)
       {
-        Debug.Log("Distance to closest Enemy " + PathLength(shortPath));
         tree.AddDataToTree(BehaviourTreeData.ShortestPath, shortPath);
+        tree.AddDataToTree(BehaviourTreeData.CurrentTarget, target);
         return NodeStatus.Success;
       } else
       {

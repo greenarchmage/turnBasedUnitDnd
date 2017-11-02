@@ -13,6 +13,10 @@ namespace Assets.Scripts.AI.BehaviourTree
     WorldLayout,
     WorldLayoutObstructed,
     ShortestPath,
+    StartUp,
+    CurrentTarget,
+    EndTurn,
+
     DesireDestination,
     SetNewDestAllowed,
     DesireTimeStart,

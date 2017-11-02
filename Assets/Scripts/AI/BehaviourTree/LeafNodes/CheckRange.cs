@@ -17,9 +17,18 @@ namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
     public override NodeStatus Tick()
     {
       // using the weapon, check if the nearest target ( in the tree already) is within range
-      // return success if within range 
-      // return failure else
-      return NodeStatus.Success;
+      Assets.Scripts.Character.Character AICharacter = (Character.Character)tree.treeData[BehaviourTreeData.CurrentCharacter];
+      Character.Character target = (Character.Character)tree.treeData[BehaviourTreeData.CurrentTarget];
+      Vector3 tarGridPos = target.GetGridPosition();
+      Vector3 curGridPos = AICharacter.GetGridPosition();
+      if(AICharacter.Stats.EquipedWeapon.Range >= Mathf.FloorToInt(Vector3.Distance(tarGridPos, curGridPos)))
+      {
+        return NodeStatus.Success;
+      }
+      else
+      {
+        return NodeStatus.Failure;
+      }
     }
   }
 }

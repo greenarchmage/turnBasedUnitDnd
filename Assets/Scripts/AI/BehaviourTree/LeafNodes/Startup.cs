@@ -17,7 +17,7 @@ namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
     public override NodeStatus Tick()
     {
       // get from tree
-      bool startup = false;
+      bool startup = (bool)tree.treeData[BehaviourTreeData.StartUp];
       if (startup)
       {
         startup = false;

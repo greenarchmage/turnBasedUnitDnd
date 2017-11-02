@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
 {
+  /// <summary>
+  /// This node is obsolete for the full movement tree
+  /// </summary>
   public class MoveWithinRangeNearestEnemy : LeafNode
   {
     public MoveWithinRangeNearestEnemy(BehaviourTree tree, BehaviourTreeNode parent) : base(tree, parent)
