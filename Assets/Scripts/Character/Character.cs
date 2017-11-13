@@ -94,6 +94,14 @@ namespace Assets.Scripts.Character
       MoveLeft = Stats.MovementSpeed;
       ActionsPoins = 1;
     }
+    public void StartTurn()
+    {
+      if (AIBehaviour != null)
+      {
+        AIBehaviour.AddDataToTree(BehaviourTreeData.StartUp, true);
+        AIBehaviour.AddDataToTree(BehaviourTreeData.EndTurn, false);
+      }
+    }
 
     /// <summary>
     /// Moves the character to the next point on the path
