@@ -116,9 +116,19 @@ public class UnitTestBaseController : MonoBehaviour {
         {
           Transform objectHit = hit.transform;
 
-          if(objectHit.GetComponent<MeshRenderer>().material.name == "Grass (Instance)")
+          //if(objectHit.GetComponent<MeshRenderer>().material.name == "Grass (Instance)")
+          //{
+          //  selected.transform.position = objectHit.position + new Vector3(0f, (selected.transform.localScale.y/2) +0.5f, 0f);
+          //}
+          if(selected.GetComponent<Character>() != null)
           {
-            selected.transform.position = objectHit.position + new Vector3(0f, (selected.transform.localScale.y/2) +0.5f, 0f);
+            Vector3 selectedCubePos = selected.GetComponent<Character>().GetGridPosition();
+            Vector3 hitPos = hit.transform.position;
+            List<PathNode> path = AStar.ShortestPath(TerrainController.worldLayout, new bool[200, 20, 200],
+          (int)selectedCubePos.x, (int)selectedCubePos.y, (int)selectedCubePos.z,
+          (int)hitPos.x, (int)hitPos.y, (int)hitPos.z);
+            selected.GetComponent<Character>().Path = path;
+            selected.GetComponent<Character>().ResetActionPoints();
           }
         }
       }
