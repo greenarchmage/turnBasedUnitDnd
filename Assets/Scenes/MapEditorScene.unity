@@ -155,6 +155,7 @@ MonoBehaviour:
   Cursor: {fileID: 1947349643}
   TerrainCube: {fileID: 1120738344478490, guid: 2dca1c71a81d8cc41be7acb5145fcfd9,
     type: 2}
+  CameraHolder: {fileID: 852659264}
 --- !u!1 &488582591
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,6 +280,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 70f9a311ffe4ab141ad10aa8723b31b0, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &852659264 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1326282881914000, guid: 70f9a311ffe4ab141ad10aa8723b31b0,
+    type: 2}
+  m_PrefabInternal: {fileID: 852659263}
 --- !u!1 &1141462664
 GameObject:
   m_ObjectHideFlags: 0

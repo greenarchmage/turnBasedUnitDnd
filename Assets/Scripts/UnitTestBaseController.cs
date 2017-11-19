@@ -88,14 +88,17 @@ public class UnitTestBaseController : MonoBehaviour {
         Transform objectHit = hit.transform;
 
         // Do something with the object that was hit by the raycast.
-        if(objectHit.GetComponent<Selectable>() != null)
+        // NOTE: GetComponent is a heavy operation, and is used twice in the following 5 lines.
+        Selectable selectableScript = objectHit.GetComponent<Selectable>();
+        if (selectableScript != null)
         {
-          if (selected != null) changeEmission(selected, Color.black); // Color.black means no emission.
+          if (selected != null)
+            selected.GetComponent<Selectable>().ChangeEmission(Color.black); // Color.black means no emission.
 
           selected = objectHit.gameObject;
-          changeEmission(selected, emissionColor);
+          selectableScript.ChangeEmission(emissionColor);
         } else if (selected != null) {
-          changeEmission(selected, Color.black);
+          selectableScript.ChangeEmission(Color.black);
           selected = null;
         }
       }
@@ -148,14 +151,14 @@ public class UnitTestBaseController : MonoBehaviour {
     }
   }
 
-  private void changeEmission(GameObject gObj, Color c)
-  {
-    var emissionColor = c;
-    Renderer[] gObjRenderers = gObj.GetComponentsInChildren<Renderer>();
-    foreach (Renderer r in gObjRenderers) {
-      r.material.SetColor("_EmissionColor", emissionColor);
-    }
-  }
+  //private void changeEmission(GameObject gObj, Color c)
+  //{
+  //  var emissionColor = c;
+  //  Renderer[] gObjRenderers = gObj.GetComponentsInChildren<Renderer>();
+  //  foreach (Renderer r in gObjRenderers) {
+  //    r.material.SetColor("_EmissionColor", emissionColor);
+  //  }
+  //}
 
   private void instantiateBlueprint(CubeType[,,] blueprint, Vector3 baseVector)
   {

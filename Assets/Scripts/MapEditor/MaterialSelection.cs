@@ -10,8 +10,25 @@ public class MaterialSelection : MonoBehaviour, IPointerDownHandler {
   public MapBuilder MapBuilderObject;
   public CubeType CubeType;
 
+  private bool isSelected;
+
+  void Start()
+  {
+    MapBuilderObject.SelectedCubeChanged += OnCubeChange;
+  }
+  
   public void OnPointerDown(PointerEventData eventData)
   {
     MapBuilderObject.ChangeCubeType(CubeType);
+  }
+
+  public void OnCubeChange(object sender, CubeChangeEventArgs e)
+  {
+    if (e.NewCubeType == CubeType) { 
+      isSelected = true;
+      
+    } else { 
+      isSelected = false;
+    }
   }
 }
