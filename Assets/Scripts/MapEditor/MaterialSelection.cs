@@ -19,7 +19,7 @@ public class MaterialSelection : MonoBehaviour, IPointerDownHandler {
   
   public void OnPointerDown(PointerEventData eventData)
   {
-    MapBuilderObject.ChangeCubeType(CubeType);
+    MapBuilderObject.ChangeSelectedCubeType(CubeType);
   }
 
   public void OnCubeChange(object sender, CubeChangeEventArgs e)

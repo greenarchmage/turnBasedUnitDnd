@@ -7,28 +7,22 @@ public delegate void CubeChangeEventHandler(object sender, CubeChangeEventArgs e
 
 public class MapBuilder : MonoBehaviour {
 
-  public GameObject Cursor;
-  public GameObject TerrainCube;
-  public GameObject CameraHolder;
+#if UNITY_EDITOR
+  public MapDataHandler MapDataHandler;
+#endif
 
-  public CubeType[,,] worldLayout = new CubeType[200, 20, 200];
+  public GameObject Cursor;
+  public GameObject CameraHolder;
 
   public event CubeChangeEventHandler SelectedCubeChanged;
 
   private CubeType selectedCubeType = CubeType.WOOD;
   private Material cursorMaterial;
-  private Material[] terrainMaterials = new Material[3];
-
-  // Ranges from 0-3 (0, 90, 180, 270)
-  private int camFacing { get { return (int)(CameraHolder.transform.rotation.eulerAngles.y / 90f); } } 
 
   void Start()
   {
     cursorMaterial = Cursor.GetComponentInChildren<Renderer>().material;
-    terrainMaterials[0] = Resources.Load<Material>("Materials/Wood");
-    terrainMaterials[1] = Resources.Load<Material>("Materials/Grass");
-    terrainMaterials[2] = Resources.Load<Material>("Materials/Rock");
-    ChangeCubeType(selectedCubeType);
+    ChangeSelectedCubeType(selectedCubeType);
   }
 
   // Update is called once per frame
@@ -37,50 +31,35 @@ public class MapBuilder : MonoBehaviour {
     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
     if (Physics.Raycast(ray, out hit)) {
-      //Original marker determination
-      //Vector3 markerCoords = new Vector3(Mathf.Floor(hit.point.x), Mathf.Floor(Mathf.Abs(hit.point.y)), Mathf.Floor(hit.point.z));
+      Vector3 markerCoords = hit.point + (hit.normal / 2);
+      markerCoords = new Vector3(Mathf.Floor(markerCoords.x), Mathf.Floor(Mathf.Abs(hit.point.y)), Mathf.Floor(markerCoords.z));
 
-      //Uses projected x & z to account for direction, uses hit.point.y for proper height
-      Vector3 projectedCoords;
-      if (Input.GetKey(KeyCode.LeftControl))
-        projectedCoords = hit.point + ray.direction;
-      else
-        projectedCoords = hit.point - ray.direction;
-
-      Vector3 markerCoords = new Vector3(Mathf.Floor(projectedCoords.x), Mathf.Floor(Mathf.Abs(hit.point.y)), Mathf.Floor(projectedCoords.z));
       Cursor.transform.position = markerCoords;
 
+#if UNITY_EDITOR
       if (Input.GetMouseButtonDown(0)) {
-        Debug.Log(markerCoords);
-        Debug.Log(ray);
+        //Debug.Log("hit.point: " + hit.point);
+        //Debug.Log("hit.normal: " + hit.normal);
+        //Debug.Log("marker: " + markerCoords);
+        //Debug.Log(ray);
 
+        MapDataHandler.FlipAt(markerCoords, selectedCubeType);
+      }
+
+      if (Input.GetMouseButtonDown(1)) {
         // Offset marker to center og cubic coordinates.
-        Vector3 centerMarkerCoords = markerCoords + new Vector3(0.5f, 0.5f, 0.5f);
-
-        foreach (Collider col in Physics.OverlapSphere(centerMarkerCoords, 0.1f)) {
-          DeepDestroy(col.gameObject);
-        }
-
-        if (worldLayout[(int)markerCoords.x, (int)markerCoords.y, (int)markerCoords.z] != selectedCubeType) {
-          worldLayout[(int)markerCoords.x, (int)markerCoords.y, (int)markerCoords.z] = selectedCubeType;
-          var newCube = Instantiate(TerrainCube, markerCoords, Quaternion.identity, null);
-          newCube.GetComponentInChildren<Renderer>().material = terrainMaterials[(int)selectedCubeType-1]; // -1 to converts enum to array index.
-        } else {
-          worldLayout[(int)markerCoords.x, (int)markerCoords.y, (int)markerCoords.z] = CubeType.NONE;
+        if (hit.collider.gameObject.name != "MapFoundation") {
+          Vector3 hitObjectCoords = rootPosition(hit.collider.gameObject);
+          Vector3 destroyMarkerCoods = hitObjectCoords + new Vector3(0.5f, 0.5f, 0.5f);
+          MapDataHandler.DestroyAt(destroyMarkerCoods);
+          MapDataHandler.FlipAt(hitObjectCoords, CubeType.NONE);
         }
       }
+#endif
     }
-	}
-
-  private void DeepDestroy(GameObject gameObject)
-  {
-    if (gameObject.transform.parent != null)
-      DeepDestroy(gameObject.transform.parent.gameObject);
-    else
-      Destroy(gameObject);
   }
 
-  public void ChangeCubeType(CubeType newType)
+  public void ChangeSelectedCubeType(CubeType newType)
   {
     var temp = SelectedCubeChanged;
     if (temp != null)
@@ -100,5 +79,13 @@ public class MapBuilder : MonoBehaviour {
       case CubeType.ROCK: return new Color(0.5f, 0.5f, 0.5f, 0.75f);
       default: return new Color(1, 1, 0, 0.75f);
     }
+  }
+
+  private Vector3 rootPosition(GameObject gObj)
+  {
+    if (gObj.transform.parent != null)
+      return rootPosition(gObj.transform.parent.gameObject);
+    else
+      return gObj.transform.position;
   }
 }
