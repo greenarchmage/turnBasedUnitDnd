@@ -43,13 +43,17 @@ public class MapDataHandler : MonoBehaviour {
   public void LoadMap()
   {
     MapData data = AssetDatabase.LoadAssetAtPath<MapData>("Assets/ScriptableObjects/" + saveName + ".asset");
-    var newMapLayout = data.Layout;
+    if (data != null) { 
+      var newMapLayout = data.Layout;
 
-    rawMapLayout = new CubeType[200, 20, 200];
-    for (int x = 0; x < 200; x++)
-      for (int y = 0; y < 20; y++)
-        for (int z = 0; z < 200; z++)
-          FlipAt(x, y, z, newMapLayout[x, y, z]);
+      rawMapLayout = new CubeType[200, 20, 200];
+      for (int x = 0; x < 200; x++)
+        for (int y = 0; y < 20; y++)
+          for (int z = 0; z < 200; z++)
+            FlipAt(x, y, z, newMapLayout[x, y, z]);
+    } else {
+      Debug.LogWarning(string.Format("No MapData asset named {0} was found.", saveName));
+    }
   }
 
 
