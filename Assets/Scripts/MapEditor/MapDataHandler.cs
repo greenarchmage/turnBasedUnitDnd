@@ -11,7 +11,6 @@ public class MapDataHandler : MonoBehaviour {
   public Text EditorOnlyText;
   public GameObject TerrainCube;
 
-  private MapData MapLayout { get { return new MapData(rawMapLayout); } }
   private CubeType[,,] rawMapLayout = new CubeType[200, 20, 200];
   private string saveName = "defaultNewSave";
   private Material[] terrainMaterials = new Material[3];
@@ -35,8 +34,22 @@ public class MapDataHandler : MonoBehaviour {
   // Wont work when compiled due to lacking UnityEditor
   public void SaveMap()
   {
-    AssetDatabase.CreateAsset(MapLayout, "Assets/ScriptableObjects/" + saveName + ".asset");
+    MapData data = ScriptableObject.CreateInstance<MapData>();
+    data.Layout = rawMapLayout;
+    AssetDatabase.CreateAsset(data, "Assets/ScriptableObjects/" + saveName + ".asset");
     AssetDatabase.SaveAssets();
+  }
+
+  public void LoadMap()
+  {
+    MapData data = AssetDatabase.LoadAssetAtPath<MapData>("Assets/ScriptableObjects/" + saveName + ".asset");
+    var newMapLayout = data.Layout;
+
+    rawMapLayout = new CubeType[200, 20, 200];
+    for (int x = 0; x < 200; x++)
+      for (int y = 0; y < 20; y++)
+        for (int z = 0; z < 200; z++)
+          FlipAt(x, y, z, newMapLayout[x, y, z]);
   }
 
 
