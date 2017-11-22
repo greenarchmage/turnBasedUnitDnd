@@ -41,6 +41,12 @@ public class AIController : MonoBehaviour {
     AllCharacters.Add(cha);
   }
 
+  /// <summary>
+  /// Still uses preset stupid AI
+  /// </summary>
+  /// <param name="pos">Spawn position</param>
+  /// <param name="owner">The owner of the AI</param>
+  /// <param name="stats">The stats of the character</param>
   public void CreateAICharacterAtLocation(Vector3 pos, Player owner, CharacterData stats)
   {
     GameObject character = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), pos, Quaternion.identity) as GameObject;
