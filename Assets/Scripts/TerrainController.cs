@@ -12,6 +12,7 @@ public class TerrainController : MonoBehaviour
   public MapData MapData;
   public GameObject TerrainHolder;
   public CubeType[,,] MapLayout = new CubeType[200, 20, 200];
+  public bool[,,] Obstructed = new bool[200, 20, 200]; // is here for future work with limiting movement
 
   private GameObject terrainCube;
   private Material[] terrainMaterials = new Material[5];

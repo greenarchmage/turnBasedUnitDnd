@@ -29,47 +29,49 @@ public class UnitTestBaseController : MonoBehaviour {
 
     // Instantiate characters
     // TODO
-    testPathChar = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(10f, 2f, 10f), Quaternion.identity) as GameObject;
-    testPathChar.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
-    testPathChar.GetComponent<Character>().Owner = new Assets.Scripts.Player() { Name = "Alex" };
-    AIControllerObj.AddCharacter(testPathChar.GetComponent<Character>());
 
     GameObject fightChar = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(12f, 2f, 12f), Quaternion.identity) as GameObject;
     fightChar.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
     fightChar.GetComponent<Character>().Owner = new Assets.Scripts.Player() { Name = "Simba" };
     AIControllerObj.AddCharacter(fightChar.GetComponent<Character>());
 
-    testTree = new BehaviourTree(testPathChar);
-    //Startupsubtree reset the character and find the nearest enemy
-    SuccessNode startUpDecorator = new SuccessNode(testTree, testTree.root);
-    SequenceNode startUpSubTree = new SequenceNode(testTree, startUpDecorator);
-    startUpSubTree.Children.Add(new Startup(testTree, startUpSubTree));
-    startUpSubTree.Children.Add(new ResetActionPoints(testTree, startUpSubTree));
-    startUpSubTree.Children.Add(new FindNearestEnemy(testTree, startUpSubTree));
+    AIControllerObj.CreateAICharacterAtLocation(new Vector3(10f, 2f, 10f), new Assets.Scripts.Player() { Name = "Alex" }, CharacterPresets.CreateWarrior());
+    //testPathChar = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(10f, 2f, 10f), Quaternion.identity) as GameObject;
+    //testPathChar.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
+    //testPathChar.GetComponent<Character>().Owner = new Assets.Scripts.Player() { Name = "Alex" };
+    //AIControllerObj.AddCharacter(testPathChar.GetComponent<Character>());
 
-    startUpDecorator.child = startUpSubTree;
-    ((SequenceNode)testTree.root).Children.Add(startUpDecorator);
+    //testTree = new BehaviourTree(testPathChar);
+    ////Startupsubtree reset the character and find the nearest enemy
+    //SuccessNode startUpDecorator = new SuccessNode(testTree, testTree.root);
+    //SequenceNode startUpSubTree = new SequenceNode(testTree, startUpDecorator);
+    //startUpSubTree.Children.Add(new Startup(testTree, startUpSubTree));
+    //startUpSubTree.Children.Add(new ResetActionPoints(testTree, startUpSubTree));
+    //startUpSubTree.Children.Add(new FindNearestEnemy(testTree, startUpSubTree));
 
-    //Attack subtree
-    InverterNode attackInverter = new InverterNode(testTree, testTree.root);
-    SequenceNode attackSubtree = new SequenceNode(testTree, attackInverter);
-    attackSubtree.Children.Add(new CheckRange(testTree, attackSubtree));
-    attackSubtree.Children.Add(new AttackTarget(testTree, attackSubtree));
+    //startUpDecorator.child = startUpSubTree;
+    //((SequenceNode)testTree.root).Children.Add(startUpDecorator);
 
-    attackInverter.child = attackSubtree;
-    ((SequenceNode)testTree.root).Children.Add(attackInverter);
+    ////Attack subtree
+    //InverterNode attackInverter = new InverterNode(testTree, testTree.root);
+    //SequenceNode attackSubtree = new SequenceNode(testTree, attackInverter);
+    //attackSubtree.Children.Add(new CheckRange(testTree, attackSubtree));
+    //attackSubtree.Children.Add(new AttackTarget(testTree, attackSubtree));
 
-    //Movement subtree
-    ((SequenceNode)testTree.root).Children.Add(new Assets.Scripts.AI.BehaviourTree.LeafNodes.MoveTowardsNearestEnemy(testTree, testTree.root));
+    //attackInverter.child = attackSubtree;
+    //((SequenceNode)testTree.root).Children.Add(attackInverter);
 
-    // Tree data, this should be added/or available to all AI characters
-    testTree.AddDataToTree(BehaviourTreeData.AllCharacters, AIControllerObj.AllCharacters);
-    testTree.AddDataToTree(BehaviourTreeData.CurrentCharacter, testPathChar.GetComponent<Character>());
-    testTree.AddDataToTree(BehaviourTreeData.WorldLayout, TerrainController.MapLayout);
-    testTree.AddDataToTree(BehaviourTreeData.WorldLayoutObstructed, new bool[200, 20, 200]);
-    testTree.AddDataToTree(BehaviourTreeData.StartUp, true);
-    testTree.AddDataToTree(BehaviourTreeData.EndTurn, true);
-    testPathChar.GetComponent<Character>().AIBehaviour = testTree;
+    ////Movement subtree
+    //((SequenceNode)testTree.root).Children.Add(new Assets.Scripts.AI.BehaviourTree.LeafNodes.MoveTowardsNearestEnemy(testTree, testTree.root));
+
+    //// Tree data, this should be added/or available to all AI characters
+    //testTree.AddDataToTree(BehaviourTreeData.AllCharacters, AIControllerObj.AllCharacters);
+    //testTree.AddDataToTree(BehaviourTreeData.CurrentCharacter, testPathChar.GetComponent<Character>());
+    //testTree.AddDataToTree(BehaviourTreeData.WorldLayout, TerrainController.MapLayout);
+    //testTree.AddDataToTree(BehaviourTreeData.WorldLayoutObstructed, new bool[200, 20, 200]);
+    //testTree.AddDataToTree(BehaviourTreeData.StartUp, true);
+    //testTree.AddDataToTree(BehaviourTreeData.EndTurn, true);
+    //testPathChar.GetComponent<Character>().AIBehaviour = testTree;
   }
 
   // Update is called once per frame
