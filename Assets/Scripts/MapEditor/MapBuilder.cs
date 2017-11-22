@@ -51,8 +51,7 @@ public class MapBuilder : MonoBehaviour {
         // Offset marker to center og cubic coordinates.
         if (hit.collider.gameObject.name != "MapFoundation") {
           Vector3 hitObjectCoords = rootPosition(hit.collider.gameObject);
-          Vector3 destroyMarkerCoods = hitObjectCoords;/* + new Vector3(0.5f, 0.5f, 0.5f);*/
-          MapDataHandler.DestroyAt(destroyMarkerCoods);
+          MapDataHandler.DestroyAt(hitObjectCoords);
         }
       }
 #endif

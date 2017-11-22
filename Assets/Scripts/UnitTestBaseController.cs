@@ -29,7 +29,6 @@ public class UnitTestBaseController : MonoBehaviour {
 
     // Instantiate characters
     // TODO
-
     testPathChar = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(10f, 2f, 10f), Quaternion.identity) as GameObject;
     testPathChar.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
     testPathChar.GetComponent<Character>().Owner = new Assets.Scripts.Player() { Name = "Alex" };
@@ -66,7 +65,7 @@ public class UnitTestBaseController : MonoBehaviour {
     // Tree data, this should be added/or available to all AI characters
     testTree.AddDataToTree(BehaviourTreeData.AllCharacters, AIControllerObj.AllCharacters);
     testTree.AddDataToTree(BehaviourTreeData.CurrentCharacter, testPathChar.GetComponent<Character>());
-    testTree.AddDataToTree(BehaviourTreeData.WorldLayout, TerrainController.worldLayout);
+    testTree.AddDataToTree(BehaviourTreeData.WorldLayout, TerrainController.MapLayout);
     testTree.AddDataToTree(BehaviourTreeData.WorldLayoutObstructed, new bool[200, 20, 200]);
     testTree.AddDataToTree(BehaviourTreeData.StartUp, true);
     testTree.AddDataToTree(BehaviourTreeData.EndTurn, true);
@@ -90,16 +89,12 @@ public class UnitTestBaseController : MonoBehaviour {
         // Do something with the object that was hit by the raycast.
         // NOTE: GetComponent is a heavy operation, and is used twice in the following 5 lines.
         Selectable selectableScript = objectHit.GetComponent<Selectable>();
-        if (selectableScript != null)
-        {
+        if (selectableScript != null) {
           if (selected != null)
             selected.GetComponent<Selectable>().ChangeEmission(Color.black); // Color.black means no emission.
 
           selected = objectHit.gameObject;
           selectableScript.ChangeEmission(emissionColor);
-        } else if (selected != null) {
-          selectableScript.ChangeEmission(Color.black);
-          selected = null;
         }
       }
     }
@@ -124,7 +119,7 @@ public class UnitTestBaseController : MonoBehaviour {
           {
             Vector3 selectedCubePos = selected.GetComponent<Character>().GetGridPosition();
             Vector3 hitPos = hit.transform.position;
-            List<PathNode> path = AStar.ShortestPath(TerrainController.worldLayout, new bool[200, 20, 200],
+            List<PathNode> path = AStar.ShortestPath(TerrainController.MapLayout, new bool[200, 20, 200],
           (int)selectedCubePos.x, (int)selectedCubePos.y, (int)selectedCubePos.z,
           (int)hitPos.x, (int)hitPos.y, (int)hitPos.z);
             selected.GetComponent<Character>().Path = path;
@@ -141,7 +136,7 @@ public class UnitTestBaseController : MonoBehaviour {
       {
         Vector3 selectedCubePos = selected.GetComponent<Character>().GetGridPosition();
         Vector3 testCubePos = testPathChar.GetComponent<Character>().GetGridPosition();
-        List<PathNode> path = AStar.ShortestPath(TerrainController.worldLayout, new bool[200, 20, 200],
+        List<PathNode> path = AStar.ShortestPath(TerrainController.MapLayout, new bool[200, 20, 200],
           (int)testCubePos.x, (int)testCubePos.y, (int)testCubePos.z,
           (int)selectedCubePos.x, (int)selectedCubePos.y, (int)selectedCubePos.z);
         testPathChar.GetComponent<Character>().Path = path;
@@ -185,19 +180,19 @@ public class UnitTestBaseController : MonoBehaviour {
               //Air
               break;
             case CubeType.WOOD:
-              if (TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == CubeType.NONE)
+              if (TerrainController.MapLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == CubeType.NONE)
               {
                 tempStruc = Instantiate(cube, baseVector + new Vector3(i, j, k), Quaternion.identity) as GameObject;
                 tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Wood") as Material;
-                TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = CubeType.WOOD;
+                TerrainController.MapLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = CubeType.WOOD;
               }
               break;
             case CubeType.GRASS:
-              if (TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == CubeType.NONE)
+              if (TerrainController.MapLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] == CubeType.NONE)
               {
                 tempStruc = Instantiate(cube, baseVector + new Vector3(i, j, k), Quaternion.identity) as GameObject;
                 tempStruc.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-                TerrainController.worldLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = CubeType.GRASS;
+                TerrainController.MapLayout[i + (int)baseVector.x, j + (int)baseVector.y, k + (int)baseVector.z] = CubeType.GRASS;
               }
               break;
           }

@@ -9,58 +9,59 @@ using Assets.Scripts.Character;
 public class TerrainController : MonoBehaviour
 {
 
+  public MapData MapData;
   public GameObject TerrainHolder;
-  private GameObject terrainCube;
-  public CubeType[,,] worldLayout = new CubeType[200, 20, 200];
+  public CubeType[,,] MapLayout = new CubeType[200, 20, 200];
 
+  private GameObject terrainCube;
+  private Material[] terrainMaterials = new Material[5];
+
+  // Use this for initialization
   void Start()
   {
+    terrainMaterials[0] = Resources.Load<Material>("Materials/TerrainMaterials/Wood");
+    terrainMaterials[1] = Resources.Load<Material>("Materials/TerrainMaterials/Grass");
+    terrainMaterials[2] = Resources.Load<Material>("Materials/TerrainMaterials/Rock");
+    terrainMaterials[3] = Resources.Load<Material>("Materials/TerrainMaterials/Dirt");
+    terrainMaterials[4] = Resources.Load<Material>("Materials/TerrainMaterials/Leaves");
+
     terrainCube = Resources.Load<GameObject>("Prefabs/terrainCube");
 
-    // Instantiate floor level, used for testing
-    for (int i = 0; i < 20; i++) {
-      for (int j = 0; j < 20; j++) {
-        GameObject baseCube = Instantiate(terrainCube, new Vector3(i, 0, j), Quaternion.identity, TerrainHolder.transform) as GameObject;
-        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-        worldLayout[i, 0, j] = CubeType.GRASS;
-      }
-    }
+    LoadMap();
+  }
 
-    //build wall
-    for (int i = 0; i < 5; i++) {
-      for (int j = 1; j < 3; j++) {
-        GameObject baseCube = Instantiate(terrainCube, new Vector3(i, j, 3), Quaternion.identity, TerrainHolder.transform) as GameObject;
-        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Rock") as Material;
-        worldLayout[i, j, 3] = CubeType.ROCK;
-      }
-    }
+  // TODO: Make into a Co-routine?
+  public void LoadMap()
+  {
+    if (MapData != null) {
+      CubeType[,,] newMapLayout = MapData.Layout;
 
-    // place rock
-    for (int i = 0; i < 2; i++) {
-      for (int j = 0; j < 2; j++) {
-        GameObject baseCube = Instantiate(terrainCube, new Vector3(i + 7, 1, j + 3), Quaternion.identity, TerrainHolder.transform) as GameObject;
-        GameObject topCube = Instantiate(terrainCube, new Vector3(i + 7, 2, j + 3), Quaternion.identity, TerrainHolder.transform) as GameObject;
-        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Rock") as Material;
-        topCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Rock") as Material;
-        worldLayout[i + 7, 1, j + 3] = CubeType.ROCK;
-        worldLayout[i + 7, 2, j + 3] = CubeType.ROCK;
-      }
-    }
+      CubeType newType;
+      for (int x = 0; x < 200; x++)
+        for (int y = 0; y < 20; y++)
+          for (int z = 0; z < 200; z++) {
+            newType = newMapLayout[x, y, z];
 
-    //make a plataeu
-    for (int i = 0; i < 4; i++) {
-      for (int j = 0; j < 4; j++) {
-        GameObject baseCube = Instantiate(terrainCube, new Vector3(i + 15, 1, j + 13), Quaternion.identity, TerrainHolder.transform) as GameObject;
-        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-        worldLayout[i + 15, 1, j + 13] = CubeType.GRASS;
-      }
+            if (newType != CubeType.NONE)
+              CreateAt(x, y, z, newType);
+          }
     }
-    for (int i = 0; i < 2; i++) {
-      for (int j = 0; j < 2; j++) {
-        GameObject baseCube = Instantiate(terrainCube, new Vector3(i + 15, 2, j + 13), Quaternion.identity, TerrainHolder.transform) as GameObject;
-        baseCube.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Grass") as Material;
-        worldLayout[i + 15, 2, j + 13] = CubeType.GRASS;
-      }
+    else {
+      Debug.LogWarning(string.Format("MapData field is null. Hook MapData asset to scene!"));
+    }
+  }
+  
+  // TODO: Move to (new) MapManipulator class?
+  public void CreateAt(Vector3 point, CubeType type) { CreateAt((int)point.x, (int)point.y, (int)point.z, type); }
+  public void CreateAt(int x, int y, int z, CubeType type)
+  {
+    if (type != CubeType.NONE) {
+      MapLayout[x, y, z] = type;
+      var newCube = Instantiate(terrainCube, new Vector3(x, y, z), Quaternion.identity, TerrainHolder.transform);
+      newCube.GetComponentInChildren<Renderer>().material = terrainMaterials[(int)type - 1]; // -1 to converts enum to array index.
+    }
+    else {
+      Debug.LogWarning("Attempted to create NONE-type cube at " + new Vector3(x, y, z));
     }
   }
 }

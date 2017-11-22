@@ -26,7 +26,6 @@ public class MaterialSelection : MonoBehaviour, IPointerDownHandler {
   {
     if (e.NewCubeType == CubeType) { 
       isSelected = true;
-      
     } else { 
       isSelected = false;
     }
