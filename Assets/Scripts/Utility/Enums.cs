@@ -8,7 +8,9 @@ namespace Assets.Scripts.Utility
         NONE,
         WOOD,
         GRASS,
-        ROCK
+        ROCK,
+        DIRT,
+        LEAVES
     }
     public class Enums
     {

@@ -43,16 +43,16 @@ public class MapBuilder : MonoBehaviour {
         //Debug.Log("marker: " + markerCoords);
         //Debug.Log(ray);
 
-        MapDataHandler.FlipAt(markerCoords, selectedCubeType);
+        // MarkerCoords should always hit vacant fields.
+        MapDataHandler.CreateAt(markerCoords, selectedCubeType);
       }
 
       if (Input.GetMouseButtonDown(1)) {
         // Offset marker to center og cubic coordinates.
         if (hit.collider.gameObject.name != "MapFoundation") {
           Vector3 hitObjectCoords = rootPosition(hit.collider.gameObject);
-          Vector3 destroyMarkerCoods = hitObjectCoords + new Vector3(0.5f, 0.5f, 0.5f);
+          Vector3 destroyMarkerCoods = hitObjectCoords;/* + new Vector3(0.5f, 0.5f, 0.5f);*/
           MapDataHandler.DestroyAt(destroyMarkerCoods);
-          MapDataHandler.FlipAt(hitObjectCoords, CubeType.NONE);
         }
       }
 #endif
@@ -77,6 +77,8 @@ public class MapBuilder : MonoBehaviour {
       case CubeType.WOOD: return new Color(0.66f, 0.5f, 0.16f, 0.75f);
       case CubeType.GRASS: return new Color(0.2f, 0.5f, 0.2f, 0.75f);
       case CubeType.ROCK: return new Color(0.5f, 0.5f, 0.5f, 0.75f);
+      case CubeType.DIRT: return new Color(0.88f, 0.66f, 0.33f, 0.75f);
+      case CubeType.LEAVES: return new Color(0.25f, 0.85f, 0.25f, 0.75f);
       default: return new Color(1, 1, 0, 0.75f);
     }
   }
