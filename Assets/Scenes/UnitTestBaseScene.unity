@@ -463,7 +463,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a87788f075c686345be206712c99ee56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapData: {fileID: 0}
+  MapData: {fileID: 11400000, guid: 83b58d2537773504890ba2e44be9edfc, type: 2}
   TerrainHolder: {fileID: 977004311}
 --- !u!1001 &1971115280
 Prefab:

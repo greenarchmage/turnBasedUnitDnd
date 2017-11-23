@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MapDataHandler: {fileID: 214501655}
   Cursor: {fileID: 1947349643}
-  CameraHolder: {fileID: 896384654}
+  CameraHolder: {fileID: 852659264}
 --- !u!1 &214501654
 GameObject:
   m_ObjectHideFlags: 0
@@ -184,7 +184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SaveNameInput: {fileID: 1174021785}
   EditorOnlyText: {fileID: 1330232592}
-  TerrainCube: {fileID: 1325027454366632, guid: c73a15bd86b427a40a694fd5d985bb60,
+  TerrainCube: {fileID: 1120738344478490, guid: 2dca1c71a81d8cc41be7acb5145fcfd9,
     type: 2}
 --- !u!4 &214501656
 Transform:
@@ -545,7 +545,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 43b0128cf908d3b429bc801506eb4bf6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d474916ad19efd24182288478a45fe21, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -676,6 +676,11 @@ Prefab:
     - {fileID: 92947355910231822, guid: 70f9a311ffe4ab141ad10aa8723b31b0, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 70f9a311ffe4ab141ad10aa8723b31b0, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &852659264 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1326282881914000, guid: 70f9a311ffe4ab141ad10aa8723b31b0,
+    type: 2}
+  m_PrefabInternal: {fileID: 852659263}
 --- !u!1 &860083910
 GameObject:
   m_ObjectHideFlags: 0
@@ -750,11 +755,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 860083910}
---- !u!1 &896384654 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1326282881914000, guid: 70f9a311ffe4ab141ad10aa8723b31b0,
-    type: 2}
-  m_PrefabInternal: {fileID: 852659263}
 --- !u!1 &1141462664
 GameObject:
   m_ObjectHideFlags: 0
@@ -1695,7 +1695,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: a400f6e6698079140bc00cda68d3160f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d3473069565c91b4c84a576adcd038a1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
