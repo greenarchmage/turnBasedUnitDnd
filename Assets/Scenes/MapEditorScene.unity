@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -149,12 +149,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 147749068}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24281c10fe93ce04a9121203f59d791d, type: 3}
+  m_Script: {fileID: 11500000, guid: d4b23a4bd498bc84b9b66d8e5df2c7e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapDataHandler: {fileID: 214501655}
-  Cursor: {fileID: 1947349643}
-  CameraHolder: {fileID: 852659264}
+  MapDataHandler: {fileID: 0}
+  Cursor: {fileID: 0}
+  CameraHolder: {fileID: 0}
 --- !u!1 &214501654
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,10 +182,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a62e2315524ee704b9db4c511edf010c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SaveNameInput: {fileID: 1174021785}
-  EditorOnlyText: {fileID: 1330232592}
-  TerrainCube: {fileID: 1120738344478490, guid: 2dca1c71a81d8cc41be7acb5145fcfd9,
-    type: 2}
 --- !u!4 &214501656
 Transform:
   m_ObjectHideFlags: 0
@@ -475,8 +471,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c114b7ac786ee0543885726be73f2fd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapBuilderObject: {fileID: 147749070}
-  CubeType: 2
 --- !u!1 &722570989
 GameObject:
   m_ObjectHideFlags: 0
@@ -524,8 +518,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c114b7ac786ee0543885726be73f2fd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapBuilderObject: {fileID: 147749070}
-  CubeType: 4
 --- !u!114 &722570992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -675,11 +667,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 70f9a311ffe4ab141ad10aa8723b31b0, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &852659264 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1326282881914000, guid: 70f9a311ffe4ab141ad10aa8723b31b0,
-    type: 2}
-  m_PrefabInternal: {fileID: 852659263}
 --- !u!1 &860083910
 GameObject:
   m_ObjectHideFlags: 0
@@ -1269,7 +1256,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5746372f00e4ca42982e57780c95a47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapData: {fileID: 0}
 --- !u!1 &1454827459
 GameObject:
   m_ObjectHideFlags: 0
@@ -1477,8 +1463,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c114b7ac786ee0543885726be73f2fd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapBuilderObject: {fileID: 147749070}
-  CubeType: 1
 --- !u!1 &1841132602
 GameObject:
   m_ObjectHideFlags: 0
@@ -1647,7 +1631,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1914909869}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 487, y: 204, z: 0}
+  m_LocalPosition: {x: 478, y: 194, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1766004047}
@@ -1714,8 +1698,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c114b7ac786ee0543885726be73f2fd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapBuilderObject: {fileID: 147749070}
-  CubeType: 5
 --- !u!114 &1942476195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1858,5 +1840,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c114b7ac786ee0543885726be73f2fd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapBuilderObject: {fileID: 147749070}
-  CubeType: 3

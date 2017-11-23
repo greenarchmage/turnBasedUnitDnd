@@ -9,6 +9,7 @@ using Assets.Scripts.AI.BehaviourTree;
 using Assets.Scripts.AI.BehaviourTree.CompositeNodes;
 using Assets.Scripts.AI.BehaviourTree.LeafNodes;
 using Assets.Scripts.AI.BehaviourTree.DecoratorNodes;
+using Assets.Scripts;
 
 public class UnitTestBaseController : MonoBehaviour {
   private GameObject cube;
@@ -21,55 +22,29 @@ public class UnitTestBaseController : MonoBehaviour {
   public AIController AIControllerObj;
 
   private BehaviourTree testTree;
+
+  private List<Player> playerList = new List<Player>(); // maybe change to dictionary? how will that work with turn change?
   // Use this for initialization
   void Start()
   {
     // load prefab
     cube = Resources.Load("Prefabs/cube") as GameObject;
 
+    // create players, should come from some other source
+    Player ai = new Player() { Name = "MercenaryMenace" };
+    playerList.Add(ai);
+    Player player = new Player() { Name = "Simba" };
+    playerList.Add(player);
+
     // Instantiate characters
     // TODO
-    testPathChar = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(10f, 2f, 10f), Quaternion.identity) as GameObject;
-    testPathChar.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
-    testPathChar.GetComponent<Character>().Owner = new Assets.Scripts.Player() { Name = "Alex" };
-    AIControllerObj.AddCharacter(testPathChar.GetComponent<Character>());
 
-    GameObject fightChar = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(12f, 2f, 12f), Quaternion.identity) as GameObject;
-    fightChar.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
-    fightChar.GetComponent<Character>().Owner = new Assets.Scripts.Player() { Name = "Simba" };
-    AIControllerObj.AddCharacter(fightChar.GetComponent<Character>());
+    GameObject PlayerCharacterObject = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(12f, 2f, 12f), Quaternion.identity) as GameObject;
+    PlayerCharacterObject.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
+    PlayerCharacterObject.GetComponent<Character>().Owner = player;
+    AIControllerObj.AddCharacter(PlayerCharacterObject.GetComponent<Character>()); // add the character to the list of characters the AI can interact with
 
-    testTree = new BehaviourTree(testPathChar);
-    //Startupsubtree reset the character and find the nearest enemy
-    SuccessNode startUpDecorator = new SuccessNode(testTree, testTree.root);
-    SequenceNode startUpSubTree = new SequenceNode(testTree, startUpDecorator);
-    startUpSubTree.Children.Add(new Startup(testTree, startUpSubTree));
-    startUpSubTree.Children.Add(new ResetActionPoints(testTree, startUpSubTree));
-    startUpSubTree.Children.Add(new FindNearestEnemy(testTree, startUpSubTree));
-
-    startUpDecorator.child = startUpSubTree;
-    ((SequenceNode)testTree.root).Children.Add(startUpDecorator);
-
-    //Attack subtree
-    InverterNode attackInverter = new InverterNode(testTree, testTree.root);
-    SequenceNode attackSubtree = new SequenceNode(testTree, attackInverter);
-    attackSubtree.Children.Add(new CheckRange(testTree, attackSubtree));
-    attackSubtree.Children.Add(new AttackTarget(testTree, attackSubtree));
-
-    attackInverter.child = attackSubtree;
-    ((SequenceNode)testTree.root).Children.Add(attackInverter);
-
-    //Movement subtree
-    ((SequenceNode)testTree.root).Children.Add(new Assets.Scripts.AI.BehaviourTree.LeafNodes.MoveTowardsNearestEnemy(testTree, testTree.root));
-
-    // Tree data, this should be added/or available to all AI characters
-    testTree.AddDataToTree(BehaviourTreeData.AllCharacters, AIControllerObj.AllCharacters);
-    testTree.AddDataToTree(BehaviourTreeData.CurrentCharacter, testPathChar.GetComponent<Character>());
-    testTree.AddDataToTree(BehaviourTreeData.WorldLayout, TerrainController.MapLayout);
-    testTree.AddDataToTree(BehaviourTreeData.WorldLayoutObstructed, new bool[200, 20, 200]);
-    testTree.AddDataToTree(BehaviourTreeData.StartUp, true);
-    testTree.AddDataToTree(BehaviourTreeData.EndTurn, true);
-    testPathChar.GetComponent<Character>().AIBehaviour = testTree;
+    AIControllerObj.CreateAICharacterAtLocation(new Vector3(10f, 2f, 10f), ai, CharacterPresets.CreateWarrior());
   }
 
   // Update is called once per frame
@@ -111,17 +86,13 @@ public class UnitTestBaseController : MonoBehaviour {
         {
           Transform objectHit = hit.transform;
 
-          //if(objectHit.GetComponent<MeshRenderer>().material.name == "Grass (Instance)")
-          //{
-          //  selected.transform.position = objectHit.position + new Vector3(0f, (selected.transform.localScale.y/2) +0.5f, 0f);
-          //}
           if(selected.GetComponent<Character>() != null)
           {
             Vector3 selectedCubePos = selected.GetComponent<Character>().GetGridPosition();
             Vector3 hitPos = hit.transform.position;
             List<PathNode> path = AStar.ShortestPath(TerrainController.MapLayout, new bool[200, 20, 200],
-          (int)selectedCubePos.x, (int)selectedCubePos.y, (int)selectedCubePos.z,
-          (int)hitPos.x, (int)hitPos.y, (int)hitPos.z);
+                (int)selectedCubePos.x, (int)selectedCubePos.y, (int)selectedCubePos.z,
+                (int)hitPos.x, (int)hitPos.y, (int)hitPos.z);
             selected.GetComponent<Character>().Path = path;
             selected.GetComponent<Character>().ResetActionPoints();
           }
