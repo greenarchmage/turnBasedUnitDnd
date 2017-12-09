@@ -24,6 +24,7 @@ public class UnitTestBaseController : MonoBehaviour {
   private BehaviourTree testTree;
 
   private List<Player> playerList = new List<Player>(); // maybe change to dictionary? how will that work with turn change?
+  private int currentPlayerInt;
   // Use this for initialization
   void Start()
   {
@@ -39,12 +40,16 @@ public class UnitTestBaseController : MonoBehaviour {
     // Instantiate characters
     // TODO
 
-    GameObject PlayerCharacterObject = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(12f, 2f, 12f), Quaternion.identity) as GameObject;
+    GameObject PlayerCharacterObject = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(3f, 2f, 3f), Quaternion.identity) as GameObject;
     PlayerCharacterObject.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
     PlayerCharacterObject.GetComponent<Character>().Owner = player;
+    player.actors.Add(PlayerCharacterObject.GetComponent<Character>());
     AIControllerObj.AddCharacter(PlayerCharacterObject.GetComponent<Character>()); // add the character to the list of characters the AI can interact with
 
-    AIControllerObj.CreateAICharacterAtLocation(new Vector3(10f, 2f, 10f), ai, CharacterPresets.CreateWarrior());
+    AIControllerObj.CreateAICharacterAtLocation(new Vector3(10f, 2f, 7f), ai, CharacterPresets.CreateWarrior());
+
+    currentPlayerInt = 0;
+    AIControllerObj.StartAITurn();
   }
 
   // Update is called once per frame
@@ -120,7 +125,7 @@ public class UnitTestBaseController : MonoBehaviour {
       }
     }
 
-    // reset MovementLeft test
+    // End turn
     if (Input.GetKeyDown(KeyCode.Return))
     {
       AIControllerObj.StartAITurn();
