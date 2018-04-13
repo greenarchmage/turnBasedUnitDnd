@@ -8,6 +8,8 @@ Models/
 Temp/
 Library/
 *.meta
+# Except meta files for ScriptableObjects
+|Assets/ScriptableObjects/*.meta
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
