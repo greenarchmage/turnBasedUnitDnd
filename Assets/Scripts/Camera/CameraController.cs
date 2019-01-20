@@ -31,6 +31,13 @@ public class CameraController : MonoBehaviour {
     }
     //Rotate 
     if (Input.GetKeyDown(KeyCode.Q)) {
+      //Debug.Log("Vector at rotation " + new Vector3(
+      //Mathf.Sin(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
+      //Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * Camera.main.transform.parent.position.y,
+      //0,
+      //Mathf.Cos(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
+      //Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * Camera.main.transform.parent.position.y
+      //));
       CameraHolder.transform.RotateAround(new Vector3(
       Mathf.Sin(Camera.main.transform.localEulerAngles.y * Mathf.PI / 180) *
       Mathf.Tan(Camera.main.transform.localEulerAngles.x * Mathf.PI / 180) * Camera.main.transform.parent.position.y,
