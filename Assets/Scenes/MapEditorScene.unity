@@ -149,7 +149,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 147749068}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24281c10fe93ce04a9121203f59d791d, type: 3}
+  m_Script: {fileID: 11500000, guid: 4cc52a26fadac5948a1ac3b81b3b7db1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MapDataHandler: {fileID: 214501655}
@@ -179,11 +179,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 214501654}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a62e2315524ee704b9db4c511edf010c, type: 3}
+  m_Script: {fileID: 11500000, guid: 3cde746db9cfd3445a3ca9599b793427, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SaveNameInput: {fileID: 1174021785}
+<<<<<<< HEAD
   EditorOnlyText: {fileID: 0}
+=======
+  EditorOnlyText: {fileID: 1330232592}
+>>>>>>> b00b564b6a01d36ac392086dad054386023aa6bd
   TerrainCube: {fileID: 1120738344478490, guid: 2dca1c71a81d8cc41be7acb5145fcfd9,
     type: 2}
 --- !u!4 &214501656
@@ -472,7 +476,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 488582591}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c114b7ac786ee0543885726be73f2fd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 83f2bcad249cc0d4f97c38e4ca858bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MapBuilderObject: {fileID: 147749070}
@@ -521,7 +525,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 722570989}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c114b7ac786ee0543885726be73f2fd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 83f2bcad249cc0d4f97c38e4ca858bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MapBuilderObject: {fileID: 147749070}
@@ -545,7 +549,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 43b0128cf908d3b429bc801506eb4bf6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d474916ad19efd24182288478a45fe21, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -672,7 +676,8 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 92947355910231822, guid: 70f9a311ffe4ab141ad10aa8723b31b0, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 70f9a311ffe4ab141ad10aa8723b31b0, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &852659264 stripped
@@ -1359,7 +1364,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1766004046}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c114b7ac786ee0543885726be73f2fd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 83f2bcad249cc0d4f97c38e4ca858bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MapBuilderObject: {fileID: 147749070}
@@ -1532,7 +1537,11 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1914909869}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 474, y: 273, z: 0}
+=======
+  m_LocalPosition: {x: 764.5, y: 261.5, z: 0}
+>>>>>>> b00b564b6a01d36ac392086dad054386023aa6bd
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1766004047}
@@ -1595,7 +1604,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1942476192}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c114b7ac786ee0543885726be73f2fd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 83f2bcad249cc0d4f97c38e4ca858bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MapBuilderObject: {fileID: 147749070}
@@ -1619,7 +1628,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: a400f6e6698079140bc00cda68d3160f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d3473069565c91b4c84a576adcd038a1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1739,7 +1748,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2113303027}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c114b7ac786ee0543885726be73f2fd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 83f2bcad249cc0d4f97c38e4ca858bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MapBuilderObject: {fileID: 147749070}
