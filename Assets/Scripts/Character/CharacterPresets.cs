@@ -10,7 +10,7 @@ namespace Assets.Scripts.Character
   {
     public static CharacterData CreateWarrior()
     {
-      return new CharacterData(10, 10) { EquipedWeapon = Weapon.CreateSpear() };
+      return new CharacterData(10, 10) { EquippedWeapon = ItemFactory.CreateSpear() };
     }
   }
 }

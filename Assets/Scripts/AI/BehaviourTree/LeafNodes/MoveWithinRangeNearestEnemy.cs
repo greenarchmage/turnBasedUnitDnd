@@ -27,7 +27,7 @@ namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
       for(int i = 0; i<path.Count; i++)
       {
         rangeCost += (int)path[i].Cost;
-        if(rangeCost > thisChar.Stats.EquipedWeapon.Range)
+        if(rangeCost > thisChar.Stats.EquippedWeapon.Range)
         {
           break;
         }

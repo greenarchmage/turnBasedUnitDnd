@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.Scripts.AI.BehaviourTree;
 using Assets.Scripts.Pathfinding;
+using Assets.Scripts.GameMechanics;
 using UnityEngine;
 
 namespace Assets.Scripts.Character
 {
-  public class Character : MonoBehaviour // maybe merge with selectable
+  public class Character : MonoBehaviour, ICharacter // NOTE: maybe merge with selectable
   {
     public List<PathNode> Path { get; set; }
 
@@ -23,7 +23,7 @@ namespace Assets.Scripts.Character
     private float deltaTime;
     void Update()
     {
-      if(Path != null && Path.Count >0 && deltaTime < Time.realtimeSinceStartup && Path[0].Cost < MoveLeft)
+      if(Path != null && Path.Count > 0 && deltaTime < Time.realtimeSinceStartup && Path[0].Cost < MoveLeft)
       {
         transform.position = new Vector3(Path[0].Coord[0], (Path[0].Coord[1] + transform.localScale.y/2 -0.5f), Path[0].Coord[2]);
         MoveLeft -= Path[0].Cost;
@@ -48,13 +48,13 @@ namespace Assets.Scripts.Character
     public void AttackCharacter(Character target)
     {
       //TODO Do unarmed???
-      if (Stats.EquipedWeapon != null)
+      if (Stats.EquippedWeapon != null)
       {
-        if (Stats.EquipedWeapon.Range >= Mathf.FloorToInt(Vector3.Distance(target.GetGridPosition(), GetGridPosition())))
+        if (Stats.EquippedWeapon.Range >= Mathf.FloorToInt(Vector3.Distance(target.GetGridPosition(), GetGridPosition())))
         {
           Debug.Log("Attacking character " + target.name);
-          int damageDealt = (UnityEngine.Random.Range(0, Stats.EquipedWeapon.DamageDie) + 1) * -1;
-          if (target.ChangeHitpoints(damageDealt))
+          new AttackAction() { Target = target, Source = this }.ResolveAction();
+          if (!target.Stats.IsDead)
           {
             Debug.Log("Target still alive");
           }
@@ -68,24 +68,6 @@ namespace Assets.Scripts.Character
         {
           Debug.Log("Out of range");
         }
-      }
-    }
-    /// <summary>
-    /// Change the hitpoints of the character.
-    /// Clamped between 0 and the max hitpoints of the character
-    /// </summary>
-    /// <param name="change">The amount to change the hitpoints, positive add, negative subtracts</param>
-    /// <returns></returns>
-    public bool ChangeHitpoints(int change)
-    {
-      Stats.CurrentHitpoints += change;
-      Stats.CurrentHitpoints = Mathf.Clamp(Stats.CurrentHitpoints, 0, Stats.Hitpoints);
-      if(Stats.CurrentHitpoints <= 0)
-      {
-        return false;
-      } else
-      {
-        return true;
       }
     }
 

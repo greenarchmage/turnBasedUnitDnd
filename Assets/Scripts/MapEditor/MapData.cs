@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 using Assets.Scripts.Utility;
+using System;
 
-public class MapData : ScriptableObject
+[Serializable]
+public class MapData
 {
   public CubeType[,,] Layout {
     get { return deepenArray(flatLayout); }
     set { flatLayout = flattenArray(value); }
   }
   
-  [SerializeField]
   private CubeType[] flatLayout = new CubeType[200*20*200];
 
   public MapData() { }
@@ -22,7 +23,6 @@ public class MapData : ScriptableObject
         for (int z = 0; z < deepArrayDimensions[2]; z++) {
           var i = x + (deepArrayDimensions[0] * (y + deepArrayDimensions[1] * z));
           flatArray[i] = deepArray[x, y, z];
-          //if (i % 4000 == 0 || i % 399 == 0) Debug.Log("(x,y,z,i): " + new Vector4(x, y, z, i));
         }
 
     return flatArray;
@@ -38,7 +38,6 @@ public class MapData : ScriptableObject
       var x = i % xLimit;
       var y = Mathf.FloorToInt((i % yLimit) / xLimit);
       var z = Mathf.FloorToInt(i / yLimit);
-      //if (i % 4000 == 0 || i % 399 == 0) Debug.Log("(x,y,z,i): " + new Vector4(x,y,z, i));
       deepArray[x, y, z] = flatArray[i];
     }
 

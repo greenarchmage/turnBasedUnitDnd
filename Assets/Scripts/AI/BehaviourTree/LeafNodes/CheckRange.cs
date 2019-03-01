@@ -21,7 +21,7 @@ namespace Assets.Scripts.AI.BehaviourTree.LeafNodes
       Character.Character target = (Character.Character)tree.treeData[BehaviourTreeData.CurrentTarget];
       Vector3 tarGridPos = target.GetGridPosition();
       Vector3 curGridPos = AICharacter.GetGridPosition();
-      if(AICharacter.Stats.EquipedWeapon.Range >= Mathf.FloorToInt(Vector3.Distance(tarGridPos, curGridPos)))
+      if(AICharacter.Stats.EquippedWeapon.Range >= Mathf.FloorToInt(Vector3.Distance(tarGridPos, curGridPos)))
       {
         return NodeStatus.Success;
       }

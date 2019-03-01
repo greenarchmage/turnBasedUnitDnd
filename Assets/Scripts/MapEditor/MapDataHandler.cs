@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts.Utility;
-using UnityEditor;
 
 public class MapDataHandler : MonoBehaviour {
 
@@ -24,30 +23,30 @@ public class MapDataHandler : MonoBehaviour {
     terrainMaterials[3] = Resources.Load<Material>("Materials/TerrainMaterials/Dirt");
     terrainMaterials[4] = Resources.Load<Material>("Materials/TerrainMaterials/Leaves");
 
-    // Removes "Editor Only" text from screen.
-    Destroy(EditorOnlyText.gameObject);
-
     SaveNameInput.onEndEdit.AddListener(ChangeSaveName);
   }
 
   public void ChangeSaveName(string newName)
   { saveName = newName; }
 
-  // Wont work when compiled due to lacking UnityEditor
+
   public void SaveMap()
   {
-    MapData data = ScriptableObject.CreateInstance<MapData>();
-    data.Layout = rawMapLayout;
-    AssetDatabase.CreateAsset(data, "Assets/ScriptableObjects/" + saveName + ".asset");
-    AssetDatabase.SaveAssets();
+    System.Runtime.Serialization.Formatters.Binary.BinaryFormatter binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+    MapData mapData = new MapData();
+    mapData.Layout = rawMapLayout;
+    System.IO.Stream fileStream = System.IO.File.OpenWrite(Application.dataPath + "/" + saveName + ".gmap");
+
+    binaryFormatter.Serialize(fileStream, mapData);
   }
 
-  // TODO: Make into a Co-routine?
   public void LoadMap()
   {
-    MapData data = AssetDatabase.LoadAssetAtPath<MapData>("Assets/ScriptableObjects/" + saveName + ".asset");
-    if (data != null) {
-      CubeType[,,] newMapLayout = data.Layout;
+    System.IO.FileStream fileStream = System.IO.File.OpenRead(Application.dataPath + "/" + saveName + ".gmap");
+    System.Runtime.Serialization.Formatters.Binary.BinaryFormatter binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+    MapData mapData = (MapData)binaryFormatter.Deserialize(fileStream);
+    if (mapData != null) {
+      CubeType[,,] newMapLayout = mapData.Layout;
 
       CubeType newType;
       for (int x = 0; x < 200; x++)
@@ -57,7 +56,8 @@ public class MapDataHandler : MonoBehaviour {
             newType = newMapLayout[x, y, z];
             if (newType != CubeType.NONE) CreateAt(x, y, z, newType);
           }
-    } else {
+    }
+    else {
       Debug.LogWarning(string.Format("No MapData asset named {0} was found.", saveName));
     }
   }

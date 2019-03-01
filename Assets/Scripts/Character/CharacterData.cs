@@ -1,8 +1,5 @@
 ﻿using Assets.Scripts.Items;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using UnityEngine;
 
 namespace Assets.Scripts.Character
 {
@@ -12,7 +9,15 @@ namespace Assets.Scripts.Character
     public float MovementSpeed { get; set; }
     
     public int CurrentHitpoints { get; set; }
-    public Weapon EquipedWeapon { get; set; }
+    public bool IsDead { get { return CurrentHitpoints <= 0; } }
+
+    #region Equipment
+    public IWeapon EquippedWeapon { get; set; }
+    public Armor EquippedArmor { get; set; }
+    private const int BaseAC = 10;
+    public int CurrentAC { get { return BaseAC + (EquippedArmor != null ? EquippedArmor.ACBonus : 0); } }
+    public int CurrentPercentileAC { get { return CurrentAC * 5; } }
+    #endregion
 
     public CharacterData() { }
 
@@ -21,6 +26,18 @@ namespace Assets.Scripts.Character
       Hitpoints = hitpoints;
       CurrentHitpoints = hitpoints;
       MovementSpeed = movementspeed;
+    }
+
+    /// <summary>
+    /// Change the hitpoints of the character.
+    /// Clamped between 0 and the max hitpoints of the character
+    /// </summary>
+    /// <param name="change">The amount to change the hitpoints, positive add, negative subtracts</param>
+    /// <returns></returns>
+    public void ChangeHitpoints(int change)
+    {
+      CurrentHitpoints += change;
+      CurrentHitpoints = Mathf.Clamp(CurrentHitpoints, 0, Hitpoints);
     }
   }
 }
