@@ -43,7 +43,7 @@ public class UnitTestBaseController : MonoBehaviour {
     GameObject PlayerCharacterObject = Instantiate(Resources.Load("Prefabs/CharacterMedBlock"), new Vector3(3f, 2f, 3f), Quaternion.identity) as GameObject;
     PlayerCharacterObject.GetComponent<Character>().Stats = CharacterPresets.CreateWarrior();
     PlayerCharacterObject.GetComponent<Character>().Owner = player;
-    player.actors.Add(PlayerCharacterObject.GetComponent<Character>());
+    player.Actors.Add(PlayerCharacterObject.GetComponent<Character>());
     AIControllerObj.AddCharacter(PlayerCharacterObject.GetComponent<Character>()); // add the character to the list of characters the AI can interact with
 
     AIControllerObj.CreateAICharacterAtLocation(new Vector3(10f, 2f, 7f), ai, CharacterPresets.CreateWarrior());

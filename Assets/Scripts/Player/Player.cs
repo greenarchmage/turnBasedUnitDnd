@@ -10,5 +10,12 @@ namespace Assets.Scripts
   {
     public string Name { get; set; }
     public Character.ICharacter Character { get; set; }
+
+    public List<ICharacter> Actors { get; set; }
+
+    public Player()
+    {
+      Actors = new List<ICharacter>();
+    }
   }
 }
